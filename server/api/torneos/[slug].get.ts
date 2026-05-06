@@ -4,7 +4,7 @@ import { createApiClient } from '~/server/utils/api-client';
 
 export default defineEventHandler(async (event): Promise<Torneo> => {
   const slug = getRouterParam(event, 'slug');
-  if (!slug) throw createError({ statusCode: 400, message: 'slug required' });
+  if (!slug) throw createError({ statusCode: 400, statusMessage: 'Bad Request', message: 'slug required' });
 
   const config = useRuntimeConfig();
   if (config.useBackend && config.cmsApiUrl) {
@@ -15,6 +15,6 @@ export default defineEventHandler(async (event): Promise<Torneo> => {
   try {
     return await loadContent<Torneo>(`torneos/${slug}`);
   } catch {
-    throw createError({ statusCode: 404, message: `Torneo not found: ${slug}` });
+    throw createError({ statusCode: 404, statusMessage: 'Not Found', message: `Torneo not found: ${slug}` });
   }
 });
