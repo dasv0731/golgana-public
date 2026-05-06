@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { buildOrganization, buildWebSite, injectSchema } from '~/composables/useSchema';
+
 useHead({
   titleTemplate: (title) => title ? `${title} — Golgana` : 'Golgana — Fútbol con profundidad',
 });
+
+injectSchema([buildOrganization(), buildWebSite()]);
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
