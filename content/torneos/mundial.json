@@ -1,0 +1,18 @@
+{
+  "slug": "mundial",
+  "nombre": "Copa Mundial FIFA",
+  "nombreCorto": "Mundial",
+  "tipo": "mundial",
+  "organizador": { "nombre": "FIFA", "sitioWeb": "https://fifa.com" },
+  "fundacion": 1930,
+  "edicionActual": { "type": "edicion", "slug": "2026", "nombre": "Mundial 2026" },
+  "edicionesPrevias": [],
+  "campeones": [
+    { "ano": 2022, "campeon": { "type": "seleccion", "slug": "argentina", "nombre": "Argentina" } }
+  ],
+  "seo": {
+    "title": "Copa Mundial FIFA — Historia, campeones, formato",
+    "description": "Toda la historia de la Copa Mundial FIFA: campeones, ediciones, formato y la edición 2026 ampliada a 48 selecciones."
+  },
+  "faq": []
+}
