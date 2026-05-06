@@ -1,0 +1,26 @@
+# Nuxt
+node_modules
+.nuxt
+.output
+.data
+dist
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Local Claude settings (do not commit)
+.claude/
+
+# Logs / cache
+*.log
+.cache
+coverage
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
