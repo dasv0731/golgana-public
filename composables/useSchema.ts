@@ -12,29 +12,39 @@ import type {
 import type { Equipo, Articulo, FaqEntry } from '~/types/api';
 
 const ORG_NAME = 'Golgana';
-const ORG_URL = 'https://golgana.net';
-const ORG_LOGO = 'https://golgana.net/logo-golgana.png';
+
+function getOrgUrls() {
+  const url =
+    (typeof useRuntimeConfig === 'function' ? useRuntimeConfig()?.public?.siteUrl : undefined) ??
+    'https://golgana.net';
+  return {
+    url,
+    logo: `${url}/logo-golgana.png`,
+  };
+}
 
 export function buildOrganization(): SchemaOrganization {
+  const { url, logo } = getOrgUrls();
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: ORG_NAME,
-    url: ORG_URL,
-    logo: ORG_LOGO,
+    url,
+    logo,
     address: { '@type': 'PostalAddress', addressCountry: 'EC' },
   };
 }
 
 export function buildWebSite(): SchemaWebSite {
+  const { url } = getOrgUrls();
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: ORG_NAME,
-    url: ORG_URL,
+    url,
     potentialAction: {
       '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: `${ORG_URL}/buscar/?q={search_term_string}` },
+      target: { '@type': 'EntryPoint', urlTemplate: `${url}/buscar/?q={search_term_string}` },
       'query-input': 'required name=search_term_string',
     },
   };
@@ -102,6 +112,7 @@ export function buildFAQPage(faqs: FaqEntry[]): SchemaFAQPage {
 }
 
 export function buildNewsArticle(art: Articulo, _articleUrl: string): SchemaNewsArticle {
+  const { logo } = getOrgUrls();
   return {
     '@context': 'https://schema.org',
     '@type': 'SportsArticle',
@@ -113,7 +124,7 @@ export function buildNewsArticle(art: Articulo, _articleUrl: string): SchemaNews
     publisher: {
       '@type': 'Organization',
       name: ORG_NAME,
-      logo: { '@type': 'ImageObject', url: ORG_LOGO },
+      logo: { '@type': 'ImageObject', url: logo },
     },
   };
 }
