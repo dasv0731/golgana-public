@@ -1,5 +1,9 @@
 const cache = new Map<string, unknown>();
 
+export function hasCached(key: string): boolean {
+  return cache.has(key);
+}
+
 export function getCached<T>(key: string): T | undefined {
   return cache.get(key) as T | undefined;
 }
