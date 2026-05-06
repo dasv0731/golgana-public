@@ -36,6 +36,8 @@ export interface HeroMetric {
   accent?: boolean;
 }
 
+export type Posicion = 'POR'|'DEF'|'MED'|'DEL';
+
 // === Torneo (evergreen) ===
 export interface Torneo {
   slug: Slug;
@@ -140,13 +142,13 @@ export interface Plantilla {
   jugadores: PlantillaJugador[];
   cuerpoTecnico: Equipo['cuerpoTecnico'];
   altas?: Array<{ jugador: Ref<'jugador'>; desde: string; tipo: 'fichaje'|'cesion'|'subida-cantera' }>;
-  bajas?: Array<{ jugador: Ref<'jugador'>; hacia: string; tipo: string }>;
+  bajas?: Array<{ jugador: Ref<'jugador'>; hacia: string; tipo: 'venta'|'cesion-saliente'|'fin-de-contrato'|'retiro' }>;
 }
 
 export interface PlantillaJugador {
   jugador: Ref<'jugador'>;
   dorsal?: number;
-  posicion: 'POR'|'DEF'|'MED'|'DEL';
+  posicion: Posicion;
   posicionDetalle?: string;
   capitan?: boolean;
   titular?: boolean;
@@ -164,7 +166,7 @@ export interface Jugador {
   altura?: number;
   peso?: number;
   pieDominante?: 'izquierdo'|'derecho'|'ambidiestro';
-  posicion: 'POR'|'DEF'|'MED'|'DEL';
+  posicion: Posicion;
   clubActual: Ref<'equipo'>;
   seleccion?: Ref<'equipo'>;
   trayectoria: TrayectoriaItem[];

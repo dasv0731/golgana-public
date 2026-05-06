@@ -1,3 +1,31 @@
+export interface SchemaPostalAddress {
+  '@type': 'PostalAddress';
+  addressCountry?: string;
+  addressLocality?: string;
+  addressRegion?: string;
+  postalCode?: string;
+  streetAddress?: string;
+}
+
+export interface SchemaPlace {
+  '@type': 'Place';
+  name: string;
+  address?: SchemaPostalAddress;
+}
+
+export interface SchemaPerson {
+  '@type': 'Person';
+  name: string;
+  url?: string;
+  image?: string;
+}
+
+export interface SchemaSportsOrganization {
+  '@type': 'SportsOrganization';
+  name: string;
+  url?: string;
+}
+
 export interface SchemaOrganization {
   '@context': 'https://schema.org';
   '@type': 'Organization';
@@ -5,11 +33,7 @@ export interface SchemaOrganization {
   url: string;
   logo: string;
   sameAs?: string[];
-  address?: {
-    '@type': 'PostalAddress';
-    addressCountry: string;
-    addressLocality?: string;
-  };
+  address?: SchemaPostalAddress;
 }
 
 export interface SchemaWebSite {
@@ -42,9 +66,9 @@ export interface SchemaSportsEvent {
   startDate: string;
   endDate?: string;
   eventStatus: 'https://schema.org/EventScheduled' | 'https://schema.org/EventPostponed' | 'https://schema.org/EventCancelled';
-  location: { '@type': 'Place'; name: string; address?: object };
+  location: SchemaPlace;
   competitor?: Array<{ '@type': 'SportsTeam'; name: string }>;
-  organizer?: { '@type': 'SportsOrganization'; name: string };
+  organizer?: SchemaSportsOrganization;
 }
 
 export interface SchemaSportsTeam {
@@ -53,11 +77,11 @@ export interface SchemaSportsTeam {
   name: string;
   alternateName?: string;
   foundingDate?: string;
-  location?: object;
-  memberOf?: object;
+  location?: SchemaPlace;
+  memberOf?: SchemaSportsOrganization;
   sameAs?: string[];
   logo?: string;
-  athlete?: object[];
+  athlete?: SchemaPerson[];
 }
 
 export interface SchemaFAQPage {
@@ -95,4 +119,8 @@ export type AnySchema =
   | SchemaSportsTeam
   | SchemaFAQPage
   | SchemaNewsArticle
-  | SchemaItemList;
+  | SchemaItemList
+  | SchemaPostalAddress
+  | SchemaPlace
+  | SchemaPerson
+  | SchemaSportsOrganization;
