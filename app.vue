@@ -6,10 +6,17 @@ useHead({
 });
 
 injectSchema([buildOrganization(), buildWebSite()]);
+
+const { inject: injectGtm } = useGtm();
+const consent = useState<string>('cookieConsent');
+
+watch(consent, (val) => { if (val === 'granted') injectGtm(); });
+onMounted(() => { if (consent.value === 'granted') injectGtm(); });
 </script>
 
 <template>
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <CookieBanner />
 </template>
