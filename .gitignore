@@ -2,6 +2,7 @@
 node_modules
 .nuxt
 .output
+.amplify-hosting
 .data
 dist
 
