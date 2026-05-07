@@ -16,7 +16,8 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "validate:schema": "tsx scripts/validate-schema.ts"
+    "validate:schema": "tsx scripts/validate-schema.ts",
+    "check:prelaunch": "tsx scripts/pre-launch-check.ts"
   },
   "dependencies": {
     "@nuxt/content": "^3.0.0",

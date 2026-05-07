@@ -117,3 +117,108 @@ curl -X POST "https://api.indexnow.org/indexnow" \
 Expected: `200 OK` or `202 Accepted`.
 
 The key in `public/` should remain stable. Save it in 1Password / team vault for reference.
+
+## OG Image + Social Preview Validation
+
+After deployment, validate OG images render correctly across major platforms.
+
+### Facebook / Meta Sharing Debugger
+1. Go to https://developers.facebook.com/tools/debug/
+2. Test these URLs (scrape new each time):
+   - `https://golgana.net/torneos/mundial/2026/`
+   - `https://golgana.net/selecciones/ecuador/`
+   - `https://golgana.net/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/`
+3. Verify:
+   - OG title matches `<title>` of the page (or `og:title` override)
+   - OG description appears
+   - 1200×630 image renders correctly (no cut-off text, branding visible)
+4. If issues: adjust `server/utils/og-templates.ts` and redeploy
+
+### Twitter / X Card Validator
+1. Go to https://cards-dev.twitter.com/validator (or equivalent)
+2. Test 2-3 URLs
+3. Verify `summary_large_image` card renders with the same OG image
+4. The `useSeo` composable already sets `twitterCard: 'summary_large_image'`
+
+### LinkedIn Post Inspector
+1. Go to https://www.linkedin.com/post-inspector/
+2. Test 2-3 URLs
+3. Verify image loads in LinkedIn previews
+
+### Common issues
+- **Image not refreshing:** Force re-scrape via Facebook debugger ("Scrape Again" button)
+- **Text cut off:** Adjust font sizes in `server/utils/og-templates.ts` and redeploy
+- **Image broken (404):** Check that `/api/og/[type]/[slug].png` returns 200 in production (test with curl)
+
+## Pre-launch checklist (target: 2026-06-09)
+
+Before announcing the site publicly, run through this list:
+
+### Technical
+- [ ] All 250+ URLs return 200 (no 404 unless intentional)
+- [ ] Schema validation passes for 8 templates: `npx tsx scripts/validate-schema.ts` returns 0 errors
+- [ ] Sitemap.xml generates: `curl https://golgana.net/sitemap.xml | grep -c "<loc>"` returns 89+
+- [ ] robots.txt accessible at https://golgana.net/robots.txt
+- [ ] llms.txt accessible at https://golgana.net/llms.txt
+- [ ] IndexNow key file accessible at https://golgana.net/<key>.txt
+- [ ] Lighthouse CI passes (or warnings within tolerance): `npx lhci autorun`
+- [ ] All security headers present: `curl -I https://golgana.net/`
+- [ ] 301 redirect www → apex working: `curl -I https://www.golgana.net/`
+- [ ] 301 no-trailing-slash → with-slash working
+- [ ] OG images render in Facebook/Twitter/LinkedIn debuggers
+- [ ] Cookie banner appears on first visit
+- [ ] GTM/GA4 fire only after consent grant
+
+### Content
+- [ ] Acerca de page has team editorial info, fuentes, contact
+- [ ] All 4 institucionales render (acerca-de, contacto, privacidad, terminos)
+- [ ] At least 15 articles in `content/noticias/` covering Mundial 2026
+- [ ] Selección Ecuador has all 8 sub-pages with real content
+- [ ] Plantilla has 26 jugadores filled in
+- [ ] At least 3 partidos Premium (Ecuador J1, J2, J3) with previa text
+- [ ] 12 grupos all have selecciones lists (D Premium, others stubs OK)
+- [ ] 16 sedes confirmed in `2026.json`
+- [ ] 22 campeones in `mundial.json` palmarés
+
+### SEO setup
+- [ ] Search Console verified (DNS TXT) + sitemap submitted
+- [ ] Bing Webmaster imported from GSC
+- [ ] IndexNow ping tested (returns 200/202)
+- [ ] GTM container ID set in Amplify env vars
+- [ ] GA4 measurement ID set in Amplify env vars
+
+### Operational
+- [ ] Custom domain `golgana.net` (apex) + `www.golgana.net` (CNAME) configured
+- [ ] SSL via ACM active (HTTPS enforced)
+- [ ] Amplify deployment successful (latest commit on main)
+- [ ] Manual smoke-test of 5 key URLs after each deploy
+
+### Launch day
+- [ ] Tag launch commit:
+  ```
+  git tag -a launch-2026-06-09 -m "MVP launch — Mundial 2026"
+  git push origin launch-2026-06-09
+  ```
+- [ ] Announce: social media, email list (when ready)
+- [ ] Monitor first 48h:
+  - GA4 RealTime — traffic flows
+  - GSC Index Coverage — URLs being indexed
+  - CloudFront/Amplify logs — no 5xx errors
+  - Lighthouse on production URLs — CWV holding
+
+## Post-launch monitoring
+
+### Week 1
+- Daily check of GSC Index Coverage
+- Daily check of GA4 organic sessions
+- Tag with `monitor-w1-<date>` if any major fixes deploy
+
+### Month 1
+- Weekly Lighthouse runs
+- Review top 50 GSC queries for content gaps
+- Add 5-10 new articles per week in `content/noticias/`
+
+### Phase 2 (post-Mundial, July+)
+- Add LigaPro Serie A, Serie B, Copa Ecuador
+- Add 7 club pages (Emelec, Barcelona SC, etc.)
+- Integrate real CMS backend (`NUXT_USE_BACKEND=true`)
