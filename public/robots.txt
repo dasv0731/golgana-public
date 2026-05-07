@@ -7,6 +7,7 @@ Disallow: /dev/
 Disallow: /*?*
 
 Sitemap: https://golgana.net/sitemap.xml
+IndexNow: https://golgana.net/a88a7d6b96f97762c1f5d55b228138b7.txt
 
 User-agent: SemrushBot
 Crawl-delay: 10
