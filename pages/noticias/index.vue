@@ -24,7 +24,7 @@ useSeo({
           :title="a.titulo"
           :href="a.path"
           :image="a.imagenHero"
-          :meta="`${a.autor.nombre} · ${new Date(a.fechaPublicacion).toLocaleDateString('es-EC')}`"
+          :meta="a.autor?.nombre ? `${a.autor.nombre} · ${new Date(a.fechaPublicacion).toLocaleDateString('es-EC')}` : new Date(a.fechaPublicacion).toLocaleDateString('es-EC')"
           :lead="i === 0 ? 'lead' : 'normal'"
         />
       </BentoGrid>
