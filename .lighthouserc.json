@@ -1,0 +1,27 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/torneos/mundial/2026/",
+        "http://localhost:3000/selecciones/ecuador/",
+        "http://localhost:3000/torneos/mundial/2026/grupos/grupo-d/",
+        "http://localhost:3000/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/"
+      ],
+      "startServerCommand": "npm run preview",
+      "startServerReadyPattern": "Listening|Local",
+      "numberOfRuns": 1
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.7 }],
+        "categories:seo": ["error", { "minScore": 0.9 }],
+        "categories:accessibility": ["warn", { "minScore": 0.85 }],
+        "first-contentful-paint": ["warn", { "maxNumericValue": 3000 }],
+        "largest-contentful-paint": ["warn", { "maxNumericValue": 3500 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }]
+      }
+    },
+    "upload": { "target": "temporary-public-storage" }
+  }
+}
