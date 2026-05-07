@@ -1,0 +1,17 @@
+{
+  "slug": "2026",
+  "torneo": { "type": "torneo", "slug": "mundial", "nombre": "Mundial" },
+  "ano": 2026,
+  "fechaInicio": "2026-06-11T14:00:00-04:00",
+  "fechaFin": "2026-07-19T15:00:00-04:00",
+  "estado": "upcoming",
+  "participantes": [],
+  "formato": { "tipoFase": "grupos", "descripcion": "12 grupos de 4. 32 clasifican a octavos." },
+  "fases": [],
+  "sedes": [],
+  "seo": {
+    "title": "Mundial 2026 — Calendario, grupos, sedes y selecciones",
+    "description": "Toda la información del Mundial 2026: 48 selecciones, 16 sedes en USA, Canadá y México. Grupos, calendario, sedes y cobertura especial de Ecuador."
+  },
+  "faq": []
+}
