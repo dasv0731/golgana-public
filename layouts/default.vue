@@ -1,8 +1,8 @@
 <template>
   <input type="checkbox" id="drawer" class="drawer-toggle sr-only" />
-  <LayoutSiteHeader />
+  <SiteHeader />
   <main>
     <slot />
   </main>
-  <LayoutSiteFooter />
+  <SiteFooter />
 </template>

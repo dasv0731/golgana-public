@@ -2,6 +2,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-05-01',
   ssr: true,
   modules: ['@nuxt/content', '@nuxt/image', '@nuxtjs/sitemap'],
+  components: [
+    { path: '~/components', pathPrefix: false },
+  ],
   typescript: { strict: true },
   css: [
     '~/assets/css/tokens.css',
