@@ -5,6 +5,14 @@ export default defineNuxtConfig({
   components: [
     { path: '~/components', pathPrefix: false },
   ],
+  sitemap: {
+    // hostname is read from runtimeConfig.public.siteUrl by @nuxtjs/sitemap v7
+    defaults: { changefreq: 'weekly', priority: 0.7 },
+    exclude: ['/api/**', '/dev/**'],
+    // Note: dynamic URLs are sourced via the @nuxtjs/sitemap module's runtime hook
+    // For build-time URL injection, see server/utils/sitemap-urls.ts and the sources config
+    sources: ['/api/__sitemap__/urls'],
+  },
   typescript: { strict: true },
   css: [
     '~/assets/css/tokens.css',

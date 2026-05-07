@@ -1,0 +1,15 @@
+# Golgana — Fútbol con profundidad
+
+> Plataforma editorial de fútbol con cobertura especial del Mundial 2026.
+
+## Mundial 2026
+- [Mundial 2026 — Hub](https://golgana.net/torneos/mundial/2026/) — La edición ampliada: 48 selecciones, 16 sedes, 104 partidos
+- [Grupo D · Ecuador](https://golgana.net/torneos/mundial/2026/grupos/grupo-d/) — Inglaterra, Ecuador, C. Marfil, Uzbekistán
+- [Selección de Ecuador](https://golgana.net/selecciones/ecuador/) — La Tri en su 4to Mundial
+
+## Selecciones
+- [Selección Ecuador](https://golgana.net/selecciones/ecuador/) — Plantilla, partidos, historia, ídolos, clásicos
+
+## Editorial
+- [Noticias](https://golgana.net/noticias/)
+- [Temas](https://golgana.net/temas/)

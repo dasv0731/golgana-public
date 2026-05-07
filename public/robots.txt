@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dev/
+Disallow: /*?*
+
+Sitemap: https://golgana.net/sitemap.xml
+
+User-agent: SemrushBot
+Crawl-delay: 10
