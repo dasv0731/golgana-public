@@ -1,7 +1,10 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-05-01',
   ssr: true,
-  modules: ['@nuxt/content', '@nuxt/image', '@nuxtjs/sitemap'],
+  // @nuxt/content desactivado en deploy (sqlite3 native module no compatible
+  // con AWS Lambda runtime). Las páginas /noticias y /temas/[slug] están
+  // stubbeadas hasta migrarlas al backend AppSync.
+  modules: ['@nuxt/image', '@nuxtjs/sitemap'],
   components: [
     { path: '~/components', pathPrefix: false },
   ],

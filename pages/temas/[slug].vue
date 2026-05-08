@@ -1,56 +1,28 @@
 <script setup lang="ts">
-import { buildBreadcrumbList, buildItemList, injectSchema } from '~/composables/useSchema';
-
 const route = useRoute();
 const slug = route.params.slug as string;
-const { data: tema } = await useFetch<any>(`/api/temas/${slug}`);
 
-const { data: articulos } = await useAsyncData(`tema-${slug}`, async () => {
-  try {
-    const all = await queryCollection('noticias').order('fechaPublicacion', 'DESC').all();
-    return all.filter((a: any) => Array.isArray(a.tags) && a.tags.includes(slug));
-  } catch {
-    return [];
-  }
+useSeo({
+  title: 'Tema — Mundial 2026',
+  description: 'Próximamente.',
 });
-
-if (!tema.value) throw createError({ statusCode: 404 });
-
-useSeo(tema.value.seo);
-
-const config = useRuntimeConfig();
-injectSchema([
-  buildBreadcrumbList([
-    { name: 'Inicio', url: config.public.siteUrl + '/' },
-    { name: 'Temas', url: config.public.siteUrl + '/temas/' },
-    { name: tema.value.nombre },
-  ]),
-  buildItemList((articulos.value ?? []).map((a: any) => ({ name: a.titulo, url: `${config.public.siteUrl}${a.path}` }))),
-]);
 </script>
 
 <template>
-  <div v-if="tema">
+  <div>
     <div class="pro-container">
-      <Breadcrumb :crumbs="[{ label: 'Inicio', to: '/' }, { label: 'Temas', to: '/temas/' }, { label: tema.nombre }]" />
+      <Breadcrumb :crumbs="[
+        { label: 'Inicio', to: '/' },
+        { label: 'Temas', to: '/temas/' },
+        { label: slug },
+      ]" />
     </div>
-    <ProHero kicker="Tema" :title="tema.nombre" :lead="tema.descripcion" />
+    <ProHero kicker="Tema editorial" :title="slug" lead="Próximamente." />
     <section class="pro-section pro-container">
-      <div class="pro-sec-head">
-        <h2 class="pro-sec-head__title">Artículos</h2>
-      </div>
-      <BentoGrid v-if="articulos?.length">
-        <EditorialCard
-          v-for="a in articulos"
-          :key="a.path"
-          :kicker="a.kicker"
-          :title="a.titulo"
-          :href="a.path"
-          :image="a.imagenHero"
-          :meta="`${a.autor.nombre} · ${new Date(a.fechaPublicacion).toLocaleDateString('es-EC')}`"
-        />
-      </BentoGrid>
-      <p v-else>Sin artículos publicados sobre este tema todavía.</p>
+      <p style="color: var(--color-text-muted)">
+        Los clusters editoriales se servirán desde el backend AppSync (`tema(slug)`)
+        una vez completemos la migración de Nuxt Content.
+      </p>
     </section>
   </div>
 </template>
