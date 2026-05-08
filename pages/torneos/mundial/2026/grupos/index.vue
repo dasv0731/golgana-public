@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Edicion, Grupo } from '~/types/api';
 import { buildBreadcrumbList, injectSchema } from '~/composables/useSchema';
+import { flagCode } from '~/utils/flag-codes';
 
 const [{ data: edicion }, { data: grupos }] = await Promise.all([
   useFetch<Edicion>('/api/torneos/mundial/2026'),
@@ -23,22 +24,7 @@ injectSchema(
   ]),
 );
 
-// Helpers
-const flagMap: Record<string, string> = {
-  ecuador: '🇪🇨', inglaterra: '🏴', 'costa-de-marfil': '🇨🇮', uzbekistan: '🇺🇿',
-  mexico: '🇲🇽', canada: '🇨🇦', marruecos: '🇲🇦', iran: '🇮🇷',
-  espana: '🇪🇸', senegal: '🇸🇳', 'costa-rica': '🇨🇷', 'arabia-saudita': '🇸🇦',
-  usa: '🇺🇸', japon: '🇯🇵', dinamarca: '🇩🇰', 'rd-congo': '🇨🇩',
-  francia: '🇫🇷', colombia: '🇨🇴', argelia: '🇩🇿', 'nueva-zelanda': '🇳🇿',
-  argentina: '🇦🇷', suiza: '🇨🇭', egipto: '🇪🇬', panama: '🇵🇦',
-  alemania: '🇩🇪', 'corea-del-sur': '🇰🇷', eslovaquia: '🇸🇰', curazao: '🇨🇼',
-  brasil: '🇧🇷', chile: '🇨🇱', camerun: '🇨🇲', jordania: '🇯🇴',
-  portugal: '🇵🇹', sudafrica: '🇿🇦', catar: '🇶🇦',
-  belgica: '🇧🇪', uruguay: '🇺🇾', tunez: '🇹🇳', haiti: '🇭🇹',
-  'paises-bajos': '🇳🇱', australia: '🇦🇺', nigeria: '🇳🇬', paraguay: '🇵🇾',
-  italia: '🇮🇹', croacia: '🇭🇷', ghana: '🇬🇭', 'cabo-verde': '🇨🇻',
-};
-const flag = (slug: string) => flagMap[slug] ?? '⚽';
+// Banderas: <TeamFlag :flag-code="flagCode(slug)" />
 
 const gruposOrdenados = computed(() => (grupos.value ?? []).slice().sort((a, b) => a.letra.localeCompare(b.letra)));
 const esGrupoTri = (g: Grupo) => g.selecciones.some((s) => s.slug === 'ecuador');
@@ -50,7 +36,7 @@ const grupoMetaMap: Record<string, GrupoMeta> = {
   A: { sede: 'Azteca · CDMX', fixture: [{ txt: '11/6 MEX–MAR' }, { txt: '16/6 CAN–IRN' }, { txt: '21/6 finales J3' }] },
   B: { sede: 'SoFi · LA',     fixture: [{ txt: '13/6 ESP–SEN' }, { txt: '18/6 CRC–KSA' }, { txt: '23/6 finales J3' }] },
   C: { sede: 'Mercedes-Benz · ATL', fixture: [{ txt: '12/6 USA–JPN' }, { txt: '17/6 DEN–COD' }, { txt: '23/6 finales J3' }] },
-  D: { sede: '🇪🇨 La Tri', fixture: [{ txt: '12/6 ECU–UZB', highlight: true }, { txt: '14/6 ENG–CIV' }, { txt: '18/6 ENG–ECU' }] },
+  D: { sede: 'La Tri', fixture: [{ txt: '12/6 ECU–UZB', highlight: true }, { txt: '14/6 ENG–CIV' }, { txt: '18/6 ENG–ECU' }] },
   E: { sede: 'MetLife · NJ',  fixture: [{ txt: '13/6 FRA–COL' }, { txt: '17/6 ALG–NZL' }, { txt: '22/6 finales J3' }] },
   F: { sede: 'MetLife · NJ',  fixture: [{ txt: '12/6 ARG–SUI' }, { txt: '16/6 EGY–PAN' }, { txt: '22/6 finales J3' }] },
   G: { sede: 'BMO · Toronto', fixture: [{ txt: '14/6 GER–KOR' }, { txt: '17/6 SVK–CUW' }, { txt: '23/6 finales J3' }] },
@@ -86,8 +72,8 @@ const heroStats = [
 // Inauguración
 const inauguracion = {
   fecha: '11 jun', hora: '14:00 ET',
-  local:  { flag: '🇲🇽', name: 'México' },
-  visita: { flag: '🇲🇦', name: 'Marruecos' },
+  local:  { slug: 'mexico',    name: 'México' },
+  visita: { slug: 'marruecos', name: 'Marruecos' },
   sede: 'Azteca · CDMX',
   href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/',
 };
@@ -118,12 +104,12 @@ const contexto = [
 
 // Imperdibles
 const imperdibles = [
-  { variant: 'dark'  as const, cols: 6, kicker: 'Inauguración · 11 jun · 14:00', sede: 'Azteca · Grupo A',  local: { flag: '🇲🇽', name: 'México' },     visita: { flag: '🇲🇦', name: 'Marruecos' },  href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/' },
-  { variant: 'green' as const, cols: 6, kicker: 'Debut Tri · 12 jun · 19:00',     sede: 'Atlanta · Grupo D', local: { flag: '🇪🇨', name: 'Ecuador' },    visita: { flag: '🇺🇿', name: 'Uzbekistán' }, href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/' },
-  { variant: 'plain' as const, cols: 4, kicker: '12 jun · MetLife',               local: { flag: '🇦🇷', name: 'Argentina' }, visita: { flag: '🇨🇭', name: 'Suiza' },     href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Filadelfia',            local: { flag: '🇪🇸', name: 'España' },    visita: { flag: '🇸🇳', name: 'Senegal' },   href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '18 jun · Houston · J2',          local: { flag: '🏴', name: 'Inglaterra' }, visita: { flag: '🇪🇨', name: 'Ecuador', highlight: true }, href: '/torneos/mundial/2026/grupos/grupo-d/inglaterra-vs-ecuador-j2/' },
-  { variant: 'plain' as const, cols: 4, kicker: '14 jun · Toronto',               local: { flag: '🇧🇷', name: 'Brasil' },   visita: { flag: '🇨🇲', name: 'Camerún' },  href: '#' },
+  { variant: 'dark'  as const, cols: 6, kicker: 'Inauguración · 11 jun · 14:00', sede: 'Azteca · Grupo A',  local: { slug: 'mexico',     name: 'México' },     visita: { slug: 'marruecos',       name: 'Marruecos' },                  href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/' },
+  { variant: 'green' as const, cols: 6, kicker: 'Debut Tri · 12 jun · 19:00',     sede: 'Atlanta · Grupo D', local: { slug: 'ecuador',    name: 'Ecuador' },    visita: { slug: 'uzbekistan',      name: 'Uzbekistán' },                 href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '12 jun · MetLife',               local: { slug: 'argentina',  name: 'Argentina' }, visita: { slug: 'suiza',           name: 'Suiza' },                      href: '#' },
+  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Filadelfia',            local: { slug: 'espana',     name: 'España' },    visita: { slug: 'senegal',         name: 'Senegal' },                    href: '#' },
+  { variant: 'plain' as const, cols: 4, kicker: '18 jun · Houston · J2',          local: { slug: 'inglaterra', name: 'Inglaterra' }, visita: { slug: 'ecuador',        name: 'Ecuador', highlight: true },  href: '/torneos/mundial/2026/grupos/grupo-d/inglaterra-vs-ecuador-j2/' },
+  { variant: 'plain' as const, cols: 4, kicker: '14 jun · Toronto',               local: { slug: 'brasil',     name: 'Brasil' },   visita: { slug: 'camerun',         name: 'Camerún' },                    href: '#' },
 ];
 
 // Editorial (mock)
@@ -228,12 +214,12 @@ const editorial = {
             </div>
             <div class="gs-next__teams">
               <div class="gs-next__team gs-next__team--r">
-                <div class="gs-next__flag">{{ inauguracion.local.flag }}</div>
+                <TeamFlag :flag-code="flagCode(inauguracion.local.slug)" :name="inauguracion.local.name" :size="32" />
                 <div class="gs-next__name">{{ inauguracion.local.name }}</div>
               </div>
               <div class="gs-next__vs">VS</div>
               <div class="gs-next__team gs-next__team--l">
-                <div class="gs-next__flag">{{ inauguracion.visita.flag }}</div>
+                <TeamFlag :flag-code="flagCode(inauguracion.visita.slug)" :name="inauguracion.visita.name" :size="32" />
                 <div class="gs-next__name">{{ inauguracion.visita.name }}</div>
               </div>
             </div>
@@ -311,11 +297,13 @@ const editorial = {
               >
                 <td>{{ row.pos }}</td>
                 <td>
-                  <span class="flag">{{ flag(row.slug) }}</span>
-                  <NuxtLink
-                    :to="`/selecciones/${row.slug}/`"
-                    :class="row.slug === 'ecuador' ? 'gtable__ec' : ''"
-                  >{{ row.nombre }}</NuxtLink>
+                  <span class="flag" style="display:inline-flex;align-items:center;gap:8px">
+                    <TeamFlag :flag-code="flagCode(row.slug)" :name="row.nombre" :size="16" />
+                    <NuxtLink
+                      :to="`/selecciones/${row.slug}/`"
+                      :class="row.slug === 'ecuador' ? 'gtable__ec' : ''"
+                    >{{ row.nombre }}</NuxtLink>
+                  </span>
                 </td>
                 <td>{{ row.pj }}</td>
                 <td>{{ row.dg }}</td>
@@ -364,10 +352,19 @@ const editorial = {
               <span :class="m.variant === 'green' ? 'gs-sede--bright' : 'gs-sede--muted'">{{ m.sede }}</span>
             </div>
             <div class="pmatch__teams">
-              <div class="pmatch__team"><strong>{{ m.local.flag }} {{ m.local.name }}</strong></div>
+              <div class="pmatch__team">
+                <strong style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(m.local.slug)" :name="m.local.name" :size="20" />
+                  {{ m.local.name }}
+                </strong>
+              </div>
               <div class="pmatch__center">VS</div>
               <div class="pmatch__team">
-                <strong :class="m.visita.highlight ? 'gs-rival-hl' : ''">{{ m.visita.flag }} {{ m.visita.name }}</strong>
+                <strong style="display:inline-flex;align-items:center;gap:8px"
+                  :class="m.visita.highlight ? 'gs-rival-hl' : ''">
+                  <TeamFlag :flag-code="flagCode(m.visita.slug)" :name="m.visita.name" :size="20" />
+                  {{ m.visita.name }}
+                </strong>
               </div>
             </div>
           </div>

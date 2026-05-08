@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Partido } from '~/types/api';
 import { buildBreadcrumbList, buildSportsEvent, injectSchema } from '~/composables/useSchema';
+import { flagCode } from '~/utils/flag-codes';
 
 const route = useRoute();
 const partidoSlug = route.params.partido as string;
@@ -55,13 +56,7 @@ injectSchema([
   }),
 ]);
 
-// Helpers
-const flagMap: Record<string, string> = {
-  ecuador: '🇪🇨', inglaterra: '🏴', 'costa-de-marfil': '🇨🇮', uzbekistan: '🇺🇿',
-  mexico: '🇲🇽', chile: '🇨🇱', colombia: '🇨🇴', bolivia: '🇧🇴', venezuela: '🇻🇪',
-  iran: '🇮🇷', catar: '🇶🇦', emiratos: '🇦🇪', 'corea-del-sur': '🇰🇷', kirguistan: '🇰🇬',
-};
-const flag = (slug: string) => flagMap[slug] ?? '⚽';
+// Banderas: usar flagCode(slug) → <TeamFlag>.
 
 const fifaRank: Record<string, string> = {
   ecuador: '25° FIFA · Conmebol',
@@ -280,12 +275,12 @@ const repercusion = {
   cita: '"Ganamos sufriendo, pero ganamos. Eso vale oro en un Mundial."',
   citaAutor: `— ${partido.value.alineaciones?.local.dt.nombre ?? 'DT local'}, conferencia post-partido`,
   tablaGrupo: [
-    { pos: 1, flag: '🏴', nombre: 'Inglaterra', pts: 3 },
-    { pos: 2, flag: '🇪🇨', nombre: 'Ecuador',    pts: 3 },
-    { pos: 3, flag: '🇨🇮', nombre: 'C. Marfil',  pts: 0 },
-    { pos: 4, flag: '🇺🇿', nombre: 'Uzbekistán', pts: 0 },
+    { pos: 1, slug: 'inglaterra',       nombre: 'Inglaterra', pts: 3 },
+    { pos: 2, slug: 'ecuador',          nombre: 'Ecuador',    pts: 3 },
+    { pos: 3, slug: 'costa-de-marfil',  nombre: 'C. Marfil',  pts: 0 },
+    { pos: 4, slug: 'uzbekistan',       nombre: 'Uzbekistán', pts: 0 },
   ],
-  proximo: { jornada: 'J2', fecha: '17 jun · 15:00 ET', local: { flag: '🏴', name: 'Inglaterra' }, visita: { flag: '🇪🇨', name: 'Ecuador' }, sede: 'Lincoln Financial Field · Filadelfia' },
+  proximo: { jornada: 'J2', fecha: '17 jun · 15:00 ET', local: { slug: 'inglaterra', name: 'Inglaterra' }, visita: { slug: 'ecuador', name: 'Ecuador' }, sede: 'Lincoln Financial Field · Filadelfia' },
   audienciaTV: { num: '9.2M', cap: 'Espectadores en EC · récord histórico no-Conmebol' },
   redes: { num: '+218K', cap: `Tweets con #LaTri durante el partido. Pico al gol de ${goleadoresLocal.value[0]?.texto.split(' · ')[0] ?? 'Páez'}.` },
 };
@@ -363,14 +358,20 @@ const repercusion = {
     <!-- SCORERS STRIP (solo finalizado) -->
     <div v-if="isFinished" class="scorers">
       <div class="scorers__c">
-        <div class="scorers__l">{{ flag(partido.local.slug) }} Goleadores</div>
+        <div class="scorers__l" style="display:inline-flex;align-items:center;gap:6px">
+          <TeamFlag :flag-code="flagCode(partido.local.slug)" :name="partido.local.nombre" :size="16" />
+          Goleadores
+        </div>
         <div class="scorers__list scorers__list--l">
           <div v-for="(g, i) in goleadoresLocal" :key="`l${i}`"><span>{{ g.minuto }}</span> {{ g.texto }}</div>
           <div v-if="!goleadoresLocal.length" class="scorers__empty">—</div>
         </div>
       </div>
       <div class="scorers__c">
-        <div class="scorers__l">{{ flag(partido.visitante.slug) }} Goleadores</div>
+        <div class="scorers__l" style="display:inline-flex;align-items:center;gap:6px">
+          <TeamFlag :flag-code="flagCode(partido.visitante.slug)" :name="partido.visitante.nombre" :size="16" />
+          Goleadores
+        </div>
         <div class="scorers__list scorers__list--v">
           <div v-for="(g, i) in goleadoresVisita" :key="`v${i}`"><span>{{ g.minuto }}</span> {{ g.texto }}</div>
           <div v-if="!goleadoresVisita.length" class="scorers__empty">—</div>
@@ -513,7 +514,7 @@ const repercusion = {
         </div>
         <BentoGrid>
           <article class="tile b-c6">
-            <span class="tile__kicker">{{ flag(partido.local.slug) }} {{ partido.local.nombre }} · {{ partido.alineaciones?.local.formacion }}</span>
+            <span class="tile__kicker"><TeamFlag :flag-code="flagCode(partido.local.slug)" :name="partido.local.nombre" :size="18" /> {{ partido.local.nombre }} · {{ partido.alineaciones?.local.formacion }}</span>
             <div class="rate-list">
               <div v-for="(r, i) in rateLocal" :key="i" class="rate-row">
                 <span class="rate-row__n">{{ r.num }}</span>
@@ -524,7 +525,7 @@ const repercusion = {
             </div>
           </article>
           <article class="tile b-c6">
-            <span class="tile__kicker">{{ flag(partido.visitante.slug) }} {{ partido.visitante.nombre }} · {{ partido.alineaciones?.visitante.formacion }}</span>
+            <span class="tile__kicker"><TeamFlag :flag-code="flagCode(partido.visitante.slug)" :name="partido.visitante.nombre" :size="18" /> {{ partido.visitante.nombre }} · {{ partido.alineaciones?.visitante.formacion }}</span>
             <div class="rate-list">
               <div v-for="(r, i) in rateVisita" :key="i" class="rate-row">
                 <span class="rate-row__n">{{ r.num }}</span>
@@ -556,7 +557,11 @@ const repercusion = {
             <span class="tile__kicker">Cómo queda el grupo</span>
             <div class="rep-table">
               <div v-for="(row, i) in repercusion.tablaGrupo" :key="i" class="rep-table__row">
-                <span><strong>{{ row.pos }}.</strong> {{ row.flag }} {{ row.nombre }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px">
+                  <strong>{{ row.pos }}.</strong>
+                  <TeamFlag :flag-code="flagCode(row.slug)" :name="row.nombre" :size="16" />
+                  {{ row.nombre }}
+                </span>
                 <strong class="rep-table__pts">{{ row.pts }}</strong>
               </div>
             </div>
@@ -567,12 +572,12 @@ const repercusion = {
             <h3 class="tile__title rep-next__date">{{ repercusion.proximo.fecha }}</h3>
             <div class="rep-next">
               <div class="rep-next__r">
-                <div class="rep-next__flag">{{ repercusion.proximo.local.flag }}</div>
+                <TeamFlag :flag-code="flagCode(repercusion.proximo.local.slug)" :name="repercusion.proximo.local.name" :size="28" />
                 <strong>{{ repercusion.proximo.local.name }}</strong>
               </div>
               <div class="rep-next__vs">VS</div>
               <div class="rep-next__l">
-                <div class="rep-next__flag">{{ repercusion.proximo.visita.flag }}</div>
+                <TeamFlag :flag-code="flagCode(repercusion.proximo.visita.slug)" :name="repercusion.proximo.visita.name" :size="28" />
                 <strong>{{ repercusion.proximo.visita.name }}</strong>
               </div>
             </div>
@@ -627,7 +632,7 @@ const repercusion = {
         </div>
         <BentoGrid>
           <article class="tile tile--green b-c6">
-            <span class="tile__kicker">{{ flag(partido.local.slug) }} {{ partido.local.nombre }} · {{ partido.alineaciones?.local.formacion }}</span>
+            <span class="tile__kicker"><TeamFlag :flag-code="flagCode(partido.local.slug)" :name="partido.local.nombre" :size="18" /> {{ partido.local.nombre }} · {{ partido.alineaciones?.local.formacion }}</span>
             <div class="xi-pitch xi-pitch--green">
               <div v-for="(row, i) in xiLocal" :key="`l${i}`" class="xi-pitch__row" :class="row.length === 1 ? 'xi-pitch__row--solo' : ''">
                 <span v-for="p in row" :key="p.num + p.name" :class="['xi-pl', p.cap ? 'xi-pl--cap' : '']">{{ p.num }} {{ p.name }}{{ p.cap ? ' (C)' : '' }}</span>
@@ -635,7 +640,7 @@ const repercusion = {
             </div>
           </article>
           <article class="tile tile--dark b-c6">
-            <span class="tile__kicker">{{ flag(partido.visitante.slug) }} {{ partido.visitante.nombre }} · {{ partido.alineaciones?.visitante.formacion }}</span>
+            <span class="tile__kicker"><TeamFlag :flag-code="flagCode(partido.visitante.slug)" :name="partido.visitante.nombre" :size="18" /> {{ partido.visitante.nombre }} · {{ partido.alineaciones?.visitante.formacion }}</span>
             <div class="xi-pitch xi-pitch--dark">
               <div v-for="(row, i) in xiVisita" :key="`v${i}`" class="xi-pitch__row" :class="row.length === 1 ? 'xi-pitch__row--solo' : ''">
                 <span v-for="p in row" :key="p.num + p.name" class="xi-pl">{{ p.num }} {{ p.name }}{{ p.cap ? ' (C)' : '' }}</span>
@@ -702,7 +707,7 @@ const repercusion = {
         </div>
         <BentoGrid>
           <article class="tile b-c6">
-            <span class="tile__kicker">{{ flag(partido.local.slug) }} {{ partido.local.nombre }} · {{ formaLocal.resumen }}</span>
+            <span class="tile__kicker"><TeamFlag :flag-code="flagCode(partido.local.slug)" :name="partido.local.nombre" :size="18" /> {{ partido.local.nombre }} · {{ formaLocal.resumen }}</span>
             <div class="forma-bars">
               <span v-for="(r, i) in formaLocal.resultados" :key="i" class="forma-bar" :style="{ background: formaColor[r] }" />
             </div>
@@ -722,7 +727,7 @@ const repercusion = {
             </div>
           </article>
           <article class="tile b-c6">
-            <span class="tile__kicker">{{ flag(partido.visitante.slug) }} {{ partido.visitante.nombre }} · {{ formaVisita.resumen }}</span>
+            <span class="tile__kicker"><TeamFlag :flag-code="flagCode(partido.visitante.slug)" :name="partido.visitante.nombre" :size="18" /> {{ partido.visitante.nombre }} · {{ formaVisita.resumen }}</span>
             <div class="forma-bars">
               <span v-for="(r, i) in formaVisita.resultados" :key="i" class="forma-bar" :style="{ background: formaColor[r] }" />
             </div>
@@ -756,7 +761,9 @@ const repercusion = {
           <div class="h2h-top">
             <div class="h2h-side h2h-side--ec">
               <div class="h2h-side__num">{{ h2hData.victoriasLocal }}</div>
-              <div class="h2h-side__l">Victorias {{ flag(partido.local.slug) }}</div>
+              <div class="h2h-side__l" style="display:inline-flex;align-items:center;gap:6px;justify-content:center">
+                Victorias <TeamFlag :flag-code="flagCode(partido.local.slug)" :name="partido.local.nombre" :size="16" />
+              </div>
             </div>
             <div class="h2h-mid">
               <div class="h2h-mid__num">{{ h2hData.empates }}</div>
@@ -764,7 +771,9 @@ const repercusion = {
             </div>
             <div class="h2h-side h2h-side--uz">
               <div class="h2h-side__num">{{ h2hData.victoriasVisitante }}</div>
-              <div class="h2h-side__l">Victorias {{ flag(partido.visitante.slug) }}</div>
+              <div class="h2h-side__l" style="display:inline-flex;align-items:center;gap:6px;justify-content:center">
+                Victorias <TeamFlag :flag-code="flagCode(partido.visitante.slug)" :name="partido.visitante.nombre" :size="16" />
+              </div>
             </div>
           </div>
           <div class="h2h-bar" aria-label="Distribución de resultados históricos">
@@ -804,7 +813,7 @@ const repercusion = {
               <div class="pick__sub">Encuesta abierta · cierra al pitazo inicial</div>
             </div>
             <div class="pick__row">
-              <div class="pick__l"><strong>{{ flag(partido.local.slug) }} {{ partido.local.nombre }}</strong></div>
+              <div class="pick__l"><strong><TeamFlag :flag-code="flagCode(partido.local.slug)" :name="partido.local.nombre" :size="18" /> {{ partido.local.nombre }}</strong></div>
               <div class="pick__bar"><div class="pick__bar__fill" :style="{ width: audiencia.local + '%' }" /></div>
               <div class="pick__v">{{ audiencia.local }}%</div>
             </div>
@@ -814,7 +823,7 @@ const repercusion = {
               <div class="pick__v">{{ audiencia.empate }}%</div>
             </div>
             <div class="pick__row">
-              <div class="pick__l"><strong>{{ flag(partido.visitante.slug) }} {{ partido.visitante.nombre }}</strong></div>
+              <div class="pick__l"><strong><TeamFlag :flag-code="flagCode(partido.visitante.slug)" :name="partido.visitante.nombre" :size="18" /> {{ partido.visitante.nombre }}</strong></div>
               <div class="pick__bar"><div class="pick__bar__fill pick__bar__fill--uz" :style="{ width: audiencia.visita + '%' }" /></div>
               <div class="pick__v">{{ audiencia.visita }}%</div>
             </div>

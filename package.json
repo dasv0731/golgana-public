@@ -23,6 +23,7 @@
     "@nuxt/image": "^1.8.0",
     "@nuxtjs/sitemap": "^7.0.0",
     "@resvg/resvg-js": "^2.6.0",
+    "flag-icons": "^7.5.0",
     "nuxt": "^3.13.0",
     "satori": "^0.10.0",
     "satori-html": "^0.3.0",

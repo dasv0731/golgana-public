@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Grupo } from '~/types/api';
 import { buildBreadcrumbList, buildItemList, injectSchema } from '~/composables/useSchema';
+import { flagCode } from '~/utils/flag-codes';
 
 const route = useRoute();
 const grupoSlug = route.params.grupo as string;
@@ -22,14 +23,14 @@ injectSchema([
 ]);
 
 // Metadatos visuales por selección (mock hasta cablear al CMS)
-type SeleMeta = { flag: string; accent: string; dato: { num: string; texto: string }; prob: number };
+type SeleMeta = { accent: string; dato: { num: string; texto: string }; prob: number };
 const seleMap: Record<string, SeleMeta> = {
-  ecuador:           { flag: '🇪🇨', accent: 'var(--color-primary-green)', dato: { num: '11', texto: 'invicto de local en Quito' },        prob: 68 },
-  inglaterra:        { flag: '🏴',  accent: '#c8102e',                     dato: { num: '68', texto: 'goles de Kane, máximo histórico' },  prob: 88 },
-  'costa-de-marfil': { flag: '🇨🇮', accent: '#ff8200',                     dato: { num: '2×', texto: 'campeón África 2023 y 2025' },       prob: 31 },
-  uzbekistan:        { flag: '🇺🇿', accent: '#1eb53a',                     dato: { num: '1°', texto: 'su primer Mundial en la historia' }, prob: 13 },
+  ecuador:           { accent: 'var(--color-primary-green)', dato: { num: '11', texto: 'invicto de local en Quito' },        prob: 68 },
+  inglaterra:        { accent: '#c8102e',                     dato: { num: '68', texto: 'goles de Kane, máximo histórico' },  prob: 88 },
+  'costa-de-marfil': { accent: '#ff8200',                     dato: { num: '2×', texto: 'campeón África 2023 y 2025' },       prob: 31 },
+  uzbekistan:        { accent: '#1eb53a',                     dato: { num: '1°', texto: 'su primer Mundial en la historia' }, prob: 13 },
 };
-const meta = (slug: string): SeleMeta => seleMap[slug] ?? { flag: '⚽', accent: 'var(--color-primary-green)', dato: { num: '—', texto: '' }, prob: 0 };
+const meta = (slug: string): SeleMeta => seleMap[slug] ?? { accent: 'var(--color-primary-green)', dato: { num: '—', texto: '' }, prob: 0 };
 
 // Mapping forma W/D/L → letra ES y clase visual
 const formaMap = { W: { letra: 'G', cls: 'streak__b--w' }, D: { letra: 'E', cls: 'streak__b--d' }, L: { letra: 'P', cls: 'streak__b--l' } } as const;
@@ -40,8 +41,8 @@ const fifaRank: Record<string, string> = { inglaterra: '4°', ecuador: '25°', '
 // Próximo partido del grupo (mock; idealmente desde API filtrando por fecha)
 const proximo = {
   jornada: 'J1 · 12 jun · 19:00 ET',
-  local:  { flag: '🇪🇨', nombre: 'Ecuador' },
-  visita: { flag: '🇺🇿', nombre: 'Uzbekistán' },
+  local:  { slug: 'ecuador',     nombre: 'Ecuador' },
+  visita: { slug: 'uzbekistan',  nombre: 'Uzbekistán' },
   sede: 'Mercedes-Benz Stadium · Atlanta',
   href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',
 };
@@ -51,18 +52,18 @@ type FixtureItem = {
   jornada: string;
   sede: string;
   hora: string;
-  local: { flag: string; nombre: string };
-  visita: { flag: string; nombre: string };
+  local: { slug: string; nombre: string };
+  visita: { slug: string; nombre: string };
   href: string;
   variant: 'dark' | 'green' | 'default';
 };
 const fixture: FixtureItem[] = [
-  { jornada: 'J1 · 12 jun · 15:00 ET · Toronto',           sede: 'BMO Field',                   hora: '16:00', local: { flag: '🏴', nombre: 'Inglaterra' },     visita: { flag: '🇨🇮', nombre: 'C. Marfil' },  href: '/torneos/mundial/2026/grupos/grupo-d/inglaterra-vs-costa-de-marfil-j1/', variant: 'dark' },
-  { jornada: 'J1 · 12 jun · 19:00 ET · Atlanta',           sede: 'Mercedes-Benz Stadium',       hora: '19:00', local: { flag: '🇪🇨', nombre: 'Ecuador' },        visita: { flag: '🇺🇿', nombre: 'Uzbekistán' }, href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',          variant: 'green' },
-  { jornada: 'J2 · 17 jun · Filadelfia',                   sede: 'Lincoln Financial Field',     hora: '15:00', local: { flag: '🏴', nombre: 'Inglaterra' },     visita: { flag: '🇪🇨', nombre: 'Ecuador' },     href: '#', variant: 'default' },
-  { jornada: 'J2 · 18 jun · Houston',                      sede: 'NRG Stadium',                 hora: '13:00', local: { flag: '🇨🇮', nombre: 'C. Marfil' },     visita: { flag: '🇺🇿', nombre: 'Uzbekistán' }, href: '#', variant: 'default' },
-  { jornada: 'J3 · 23 jun · Toronto · Simultáneo',         sede: 'BMO Field',                   hora: '15:00', local: { flag: '🇪🇨', nombre: 'Ecuador' },        visita: { flag: '🇨🇮', nombre: 'C. Marfil' },  href: '#', variant: 'default' },
-  { jornada: 'J3 · 23 jun · Atlanta · Simultáneo',         sede: 'Mercedes-Benz Stadium',       hora: '15:00', local: { flag: '🏴', nombre: 'Inglaterra' },     visita: { flag: '🇺🇿', nombre: 'Uzbekistán' }, href: '#', variant: 'default' },
+  { jornada: 'J1 · 12 jun · 15:00 ET · Toronto',           sede: 'BMO Field',                   hora: '16:00', local: { slug: 'inglaterra',       nombre: 'Inglaterra' }, visita: { slug: 'costa-de-marfil', nombre: 'C. Marfil' },  href: '/torneos/mundial/2026/grupos/grupo-d/inglaterra-vs-costa-de-marfil-j1/', variant: 'dark' },
+  { jornada: 'J1 · 12 jun · 19:00 ET · Atlanta',           sede: 'Mercedes-Benz Stadium',       hora: '19:00', local: { slug: 'ecuador',          nombre: 'Ecuador' },    visita: { slug: 'uzbekistan',      nombre: 'Uzbekistán' }, href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',          variant: 'green' },
+  { jornada: 'J2 · 17 jun · Filadelfia',                   sede: 'Lincoln Financial Field',     hora: '15:00', local: { slug: 'inglaterra',       nombre: 'Inglaterra' }, visita: { slug: 'ecuador',         nombre: 'Ecuador' },    href: '#', variant: 'default' },
+  { jornada: 'J2 · 18 jun · Houston',                      sede: 'NRG Stadium',                 hora: '13:00', local: { slug: 'costa-de-marfil',  nombre: 'C. Marfil' },  visita: { slug: 'uzbekistan',      nombre: 'Uzbekistán' }, href: '#', variant: 'default' },
+  { jornada: 'J3 · 23 jun · Toronto · Simultáneo',         sede: 'BMO Field',                   hora: '15:00', local: { slug: 'ecuador',          nombre: 'Ecuador' },    visita: { slug: 'costa-de-marfil', nombre: 'C. Marfil' },  href: '#', variant: 'default' },
+  { jornada: 'J3 · 23 jun · Atlanta · Simultáneo',         sede: 'Mercedes-Benz Stadium',       hora: '15:00', local: { slug: 'inglaterra',       nombre: 'Inglaterra' }, visita: { slug: 'uzbekistan',      nombre: 'Uzbekistán' }, href: '#', variant: 'default' },
 ];
 
 const datos = [
@@ -110,7 +111,10 @@ const datos = [
               >
                 <span class="gr-datum__num">{{ meta(s.slug).dato.num }}</span>
                 <div class="gr-datum__txt">
-                  <strong class="gr-datum__name">{{ meta(s.slug).flag }} {{ s.nombre }}</strong>
+                  <strong class="gr-datum__name">
+                    <TeamFlag :flag-code="flagCode(s.slug)" :name="s.nombre" :size="18" />
+                    {{ s.nombre }}
+                  </strong>
                   {{ meta(s.slug).dato.texto }}
                 </div>
               </div>
@@ -130,7 +134,7 @@ const datos = [
               >
                 <span class="gr-mini__pos">{{ row.posicion }}</span>
                 <span class="gr-mini__name">
-                  <span class="gr-mini__flag">{{ meta(row.seleccion.slug).flag }}</span>
+                  <TeamFlag :flag-code="flagCode(row.seleccion.slug)" :name="row.seleccion.nombre" :size="20" />
                   <strong>{{ row.seleccion.nombre }}</strong>
                 </span>
                 <span class="gr-mini__pts">{{ row.pts }}</span>
@@ -145,12 +149,12 @@ const datos = [
               <div class="gr-next__date">{{ proximo.jornada }}</div>
               <div class="gr-next__teams">
                 <div class="gr-next__team gr-next__team--r">
-                  <div class="gr-next__flag">{{ proximo.local.flag }}</div>
+                  <TeamFlag :flag-code="flagCode(proximo.local.slug)" :name="proximo.local.nombre" :size="36" />
                   <strong>{{ proximo.local.nombre }}</strong>
                 </div>
                 <div class="gr-next__vs">VS</div>
                 <div class="gr-next__team gr-next__team--l">
-                  <div class="gr-next__flag">{{ proximo.visita.flag }}</div>
+                  <TeamFlag :flag-code="flagCode(proximo.visita.slug)" :name="proximo.visita.nombre" :size="36" />
                   <strong>{{ proximo.visita.nombre }}</strong>
                 </div>
               </div>
@@ -198,7 +202,12 @@ const datos = [
                 <td>
                   <strong :class="row.posicion <= 2 ? 'gr-pos--qual' : ''">{{ row.posicion }}</strong>
                 </td>
-                <td><strong>{{ meta(row.seleccion.slug).flag }} {{ row.seleccion.nombre }}</strong></td>
+                <td>
+                  <strong style="display:inline-flex;align-items:center;gap:8px">
+                    <TeamFlag :flag-code="flagCode(row.seleccion.slug)" :name="row.seleccion.nombre" :size="20" />
+                    {{ row.seleccion.nombre }}
+                  </strong>
+                </td>
                 <td class="num">{{ fifaRank[row.seleccion.slug] ?? '—' }}</td>
                 <td class="num">{{ row.pj }}</td>
                 <td class="num">{{ row.g }}</td>
@@ -227,7 +236,10 @@ const datos = [
                 :key="s.slug"
                 class="gr-prob__row"
               >
-                <strong>{{ meta(s.slug).flag }} {{ s.nombre }}</strong>
+                <strong style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(s.slug)" :name="s.nombre" :size="18" />
+                  {{ s.nombre }}
+                </strong>
                 <span class="gr-prob__num">{{ meta(s.slug).prob }}%</span>
               </div>
             </div>
@@ -257,9 +269,19 @@ const datos = [
               <span :class="m.variant === 'green' ? 'sede--bright' : 'sede--muted'">{{ m.sede }}</span>
             </div>
             <div class="pmatch__teams">
-              <div class="pmatch__team"><strong>{{ m.local.flag }} {{ m.local.nombre }}</strong></div>
+              <div class="pmatch__team">
+                <strong style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(m.local.slug)" :name="m.local.nombre" :size="20" />
+                  {{ m.local.nombre }}
+                </strong>
+              </div>
               <div class="pmatch__center">VS<small>{{ m.hora }}</small></div>
-              <div class="pmatch__team"><strong>{{ m.visita.flag }} {{ m.visita.nombre }}</strong></div>
+              <div class="pmatch__team">
+                <strong style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(m.visita.slug)" :name="m.visita.nombre" :size="20" />
+                  {{ m.visita.nombre }}
+                </strong>
+              </div>
             </div>
           </div>
         </a>

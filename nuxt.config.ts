@@ -45,6 +45,7 @@ export default defineNuxtConfig({
   },
   typescript: { strict: true },
   css: [
+    'flag-icons/css/flag-icons.min.css',
     '~/assets/css/tokens.css',
     '~/assets/css/base.css',
     '~/assets/css/components.css',

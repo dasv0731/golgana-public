@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Edicion, Grupo } from '~/types/api';
 import { buildBreadcrumbList, buildSportsEvent, buildFAQPage, injectSchema } from '~/composables/useSchema';
+import { flagCode } from '~/utils/flag-codes';
 
 const [{ data: edicion }, { data: grupos }] = await Promise.all([
   useFetch<Edicion>('/api/torneos/mundial/2026'),
@@ -28,22 +29,8 @@ injectSchema([
   buildFAQPage(edicion.value.faq),
 ]);
 
-// Helpers
-const flagMap: Record<string, string> = {
-  ecuador: '🇪🇨', inglaterra: '🏴', 'costa-de-marfil': '🇨🇮', uzbekistan: '🇺🇿',
-  mexico: '🇲🇽', canada: '🇨🇦', marruecos: '🇲🇦', iran: '🇮🇷',
-  espana: '🇪🇸', senegal: '🇸🇳', 'costa-rica': '🇨🇷', 'arabia-saudita': '🇸🇦',
-  usa: '🇺🇸', japon: '🇯🇵', dinamarca: '🇩🇰', 'rd-congo': '🇨🇩',
-  francia: '🇫🇷', colombia: '🇨🇴', argelia: '🇩🇿', 'nueva-zelanda': '🇳🇿',
-  argentina: '🇦🇷', suiza: '🇨🇭', egipto: '🇪🇬', panama: '🇵🇦',
-  alemania: '🇩🇪', 'corea-del-sur': '🇰🇷', eslovaquia: '🇸🇰', curazao: '🇨🇼',
-  brasil: '🇧🇷', chile: '🇨🇱', camerun: '🇨🇲', jordania: '🇯🇴',
-  portugal: '🇵🇹', sudafrica: '🇿🇦', catar: '🇶🇦',
-  belgica: '🇧🇪', uruguay: '🇺🇾', tunez: '🇹🇳', haiti: '🇭🇹',
-  'paises-bajos': '🇳🇱', australia: '🇦🇺', nigeria: '🇳🇬', paraguay: '🇵🇾',
-  italia: '🇮🇹', croacia: '🇭🇷', ghana: '🇬🇭', 'cabo-verde': '🇨🇻',
-};
-const flag = (slug: string) => flagMap[slug] ?? '⚽';
+// Banderas: usar `flagCode(slug)` desde ~/utils/flag-codes.ts
+// y renderizar con <TeamFlag>.
 
 // Grupos ordenados; resaltar el del país anfitrión narrativo (Ecuador)
 const gruposOrdenados = computed(() => (grupos.value ?? []).slice().sort((a, b) => a.letra.localeCompare(b.letra)));
@@ -67,15 +54,15 @@ const heroStats = [
 // Inauguración
 const inauguracion = {
   fecha: '11 jun', hora: '14:00', etiqueta: '11 JUN · J1',
-  local:    { flag: '🇲🇽', name: 'México',    rol: 'LOCAL'   },
-  visita:   { flag: '🇲🇦', name: 'Marruecos', rol: 'VISITA'  },
+  local:    { slug: 'mexico',     name: 'México',    rol: 'LOCAL'   },
+  visita:   { slug: 'marruecos',  name: 'Marruecos', rol: 'VISITA'  },
   sede: 'Estadio Azteca · CDMX · 87.000',
   href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/',
 };
 const proximoTri = {
   etiqueta: '12 JUN · GRUPO D',
-  local:  { flag: '🇪🇨', name: 'Ecuador',    rol: 'J1'    },
-  visita: { flag: '🇺🇿', name: 'Uzbekistán', rol: 'DEBUT' },
+  local:  { slug: 'ecuador',    name: 'Ecuador',    rol: 'J1'    },
+  visita: { slug: 'uzbekistan', name: 'Uzbekistán', rol: 'DEBUT' },
   hora: '19:00',
   sede: 'Mercedes-Benz Stadium · Atlanta',
   href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',
@@ -100,29 +87,29 @@ const cd = computed(() => {
 
 // Fixture destacado (mock)
 const fixtureDestacado = [
-  { variant: 'dark' as const, cols: 6, kicker: 'Inauguración · 11 jun · 14:00 ET', sede: 'Estadio Azteca · CDMX', grupo: 'Grupo A', local: { flag: '🇲🇽', name: 'México' },    visita: { flag: '🇲🇦', name: 'Marruecos' }, jornada: 'J1',     href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/' },
-  { variant: 'green' as const, cols: 6, kicker: '12 jun · 19:00 ET · Atlanta',     sede: 'Mercedes-Benz Stadium', grupo: 'Grupo D', local: { flag: '🇪🇨', name: 'Ecuador' }, visita: { flag: '🇺🇿', name: 'Uzbekistán' }, jornada: 'J1', href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/' },
-  { variant: 'plain' as const, cols: 4, kicker: '12 jun · MetLife',                hora: '20:00', local: { flag: '🇦🇷', name: 'Argentina' },  visita: { flag: '🇨🇭', name: 'Suiza' },     href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Filadelfia',             hora: '16:00', local: { flag: '🇪🇸', name: 'España' },     visita: { flag: '🇸🇳', name: 'Senegal' },   href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '14 jun · Toronto',                hora: '15:00', local: { flag: '🏴', name: 'Inglaterra' }, visita: { flag: '🇨🇮', name: 'C. Marfil' }, href: '#' },
+  { variant: 'dark' as const,  cols: 6, kicker: 'Inauguración · 11 jun · 14:00 ET', sede: 'Estadio Azteca · CDMX', grupo: 'Grupo A', local: { slug: 'mexico',           name: 'México' },     visita: { slug: 'marruecos',  name: 'Marruecos' },  jornada: 'J1',     href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/' },
+  { variant: 'green' as const, cols: 6, kicker: '12 jun · 19:00 ET · Atlanta',      sede: 'Mercedes-Benz Stadium', grupo: 'Grupo D', local: { slug: 'ecuador',          name: 'Ecuador' },    visita: { slug: 'uzbekistan', name: 'Uzbekistán' }, jornada: 'J1', href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '12 jun · MetLife',                 hora: '20:00', local: { slug: 'argentina',        name: 'Argentina' },  visita: { slug: 'suiza',           name: 'Suiza' },      href: '#' },
+  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Filadelfia',              hora: '16:00', local: { slug: 'espana',           name: 'España' },     visita: { slug: 'senegal',         name: 'Senegal' },    href: '#' },
+  { variant: 'plain' as const, cols: 4, kicker: '14 jun · Toronto',                 hora: '15:00', local: { slug: 'inglaterra',       name: 'Inglaterra' }, visita: { slug: 'costa-de-marfil', name: 'C. Marfil' },  href: '#' },
 ];
 
 // Favoritos
 const cuotas = [
-  { num: '+450', label: '🇫🇷 Francia' },
-  { num: '+500', label: '🇧🇷 Brasil' },
-  { num: '+550', label: '🇪🇸 España' },
-  { num: '+650', label: '🇦🇷 Argentina' },
+  { num: '+450', slug: 'francia',   label: 'Francia' },
+  { num: '+500', slug: 'brasil',    label: 'Brasil' },
+  { num: '+550', slug: 'espana',    label: 'España' },
+  { num: '+650', slug: 'argentina', label: 'Argentina' },
 ];
 const probCampeon = [
-  { team: '🇫🇷 Francia',     val: 18 },
-  { team: '🇧🇷 Brasil',       val: 16 },
-  { team: '🇪🇸 España',       val: 14 },
-  { team: '🇦🇷 Argentina',    val: 12 },
-  { team: '🇩🇪 Alemania',     val: 9 },
-  { team: '🏴 Inglaterra',    val: 8 },
-  { team: '🇵🇹 Portugal',     val: 6 },
-  { team: '🇪🇨 Ecuador',      val: 3 },
+  { slug: 'francia',    team: 'Francia',     val: 18 },
+  { slug: 'brasil',     team: 'Brasil',      val: 16 },
+  { slug: 'espana',     team: 'España',      val: 14 },
+  { slug: 'argentina',  team: 'Argentina',   val: 12 },
+  { slug: 'alemania',   team: 'Alemania',    val: 9 },
+  { slug: 'inglaterra', team: 'Inglaterra',  val: 8 },
+  { slug: 'portugal',   team: 'Portugal',    val: 6 },
+  { slug: 'ecuador',    team: 'Ecuador',     val: 3 },
 ];
 const sorpresa = {
   team: 'Marruecos', cuota: '+2200',
@@ -230,13 +217,13 @@ const stadiumImg = '/img/stadium-placeholder.svg';
             </div>
             <div class="wc-match__teams">
               <div class="wc-match__team wc-match__team--r">
-                <div class="wc-match__flag">{{ inauguracion.local.flag }}</div>
+                <TeamFlag :flag-code="flagCode(inauguracion.local.slug)" :name="inauguracion.local.name" :size="36" />
                 <div class="wc-match__name">{{ inauguracion.local.name }}</div>
                 <div class="wc-match__rol">{{ inauguracion.local.rol }}</div>
               </div>
               <div class="wc-match__hr">{{ inauguracion.hora }}</div>
               <div class="wc-match__team wc-match__team--l">
-                <div class="wc-match__flag">{{ inauguracion.visita.flag }}</div>
+                <TeamFlag :flag-code="flagCode(inauguracion.visita.slug)" :name="inauguracion.visita.name" :size="36" />
                 <div class="wc-match__name">{{ inauguracion.visita.name }}</div>
                 <div class="wc-match__rol">{{ inauguracion.visita.rol }}</div>
               </div>
@@ -251,13 +238,13 @@ const stadiumImg = '/img/stadium-placeholder.svg';
             </div>
             <div class="wc-match__teams">
               <div class="wc-match__team wc-match__team--r">
-                <div class="wc-match__flag">{{ proximoTri.local.flag }}</div>
+                <TeamFlag :flag-code="flagCode(proximoTri.local.slug)" :name="proximoTri.local.name" :size="36" />
                 <div class="wc-match__name wc-match__name--accent">{{ proximoTri.local.name }}</div>
                 <div class="wc-match__rol">{{ proximoTri.local.rol }}</div>
               </div>
               <div class="wc-match__hr wc-match__hr--accent">{{ proximoTri.hora }}</div>
               <div class="wc-match__team wc-match__team--l">
-                <div class="wc-match__flag">{{ proximoTri.visita.flag }}</div>
+                <TeamFlag :flag-code="flagCode(proximoTri.visita.slug)" :name="proximoTri.visita.name" :size="36" />
                 <div class="wc-match__name">{{ proximoTri.visita.name }}</div>
                 <div class="wc-match__rol">{{ proximoTri.visita.rol }}</div>
               </div>
@@ -302,7 +289,10 @@ const stadiumImg = '/img/stadium-placeholder.svg';
           <ul class="plinklist">
             <li v-for="s in g.selecciones" :key="s.slug">
               <NuxtLink :to="`/selecciones/${s.slug}/`">
-                <span>{{ flag(s.slug) }} {{ s.nombre }}</span>
+                <span style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(s.slug)" :name="s.nombre" :size="18" />
+                  {{ s.nombre }}
+                </span>
               </NuxtLink>
             </li>
           </ul>
@@ -340,9 +330,19 @@ const stadiumImg = '/img/stadium-placeholder.svg';
               <span v-if="m.grupo" class="wc-grupo">{{ m.grupo }}</span>
             </div>
             <div class="pmatch__teams">
-              <div class="pmatch__team"><strong>{{ m.local.flag }} {{ m.local.name }}</strong></div>
+              <div class="pmatch__team">
+                <strong style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(m.local.slug)" :name="m.local.name" :size="20" />
+                  {{ m.local.name }}
+                </strong>
+              </div>
               <div class="pmatch__center">VS<small>{{ m.jornada || m.hora }}</small></div>
-              <div class="pmatch__team"><strong>{{ m.visita.flag }} {{ m.visita.name }}</strong></div>
+              <div class="pmatch__team">
+                <strong style="display:inline-flex;align-items:center;gap:8px">
+                  <TeamFlag :flag-code="flagCode(m.visita.slug)" :name="m.visita.name" :size="20" />
+                  {{ m.visita.name }}
+                </strong>
+              </div>
             </div>
           </div>
         </a>
@@ -361,7 +361,10 @@ const stadiumImg = '/img/stadium-placeholder.svg';
       <div class="stat-row wc-cuotas">
         <div v-for="(c, i) in cuotas" :key="i" class="stat-row__cell">
           <span class="stat-row__num">{{ c.num }}</span>
-          <span class="stat-row__label">{{ c.label }}</span>
+          <span class="stat-row__label" style="display:inline-flex;align-items:center;gap:6px;justify-content:center">
+            <TeamFlag :flag-code="flagCode(c.slug)" :name="c.label" :size="16" />
+            {{ c.label }}
+          </span>
         </div>
       </div>
 
@@ -371,7 +374,10 @@ const stadiumImg = '/img/stadium-placeholder.svg';
           <h3 class="tile__title">Top 8</h3>
           <div class="bars wc-prob">
             <div v-for="(p, i) in probCampeon" :key="i" class="bar">
-              <span class="bar__label">{{ p.team }}</span>
+              <span class="bar__label" style="display:inline-flex;align-items:center;gap:8px">
+                <TeamFlag :flag-code="flagCode(p.slug)" :name="p.team" :size="18" />
+                {{ p.team }}
+              </span>
               <div class="bar__track"><div class="bar__fill" :style="{ width: p.val + '%' }" /></div>
               <span class="bar__val">{{ p.val }}%</span>
             </div>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Equipo } from '~/types/api';
 import { buildBreadcrumbList, buildSportsTeam, injectSchema } from '~/composables/useSchema';
+import { flagCode } from '~/utils/flag-codes';
 
 const route = useRoute();
 const slug = route.params.slug as string;
@@ -21,11 +22,11 @@ injectSchema([
 
 // Mock data específico del Mundial (luego se mueve a la API)
 const ultimo = {
-  rival: 'México', flagLocal: '🇪🇨', flagRival: '🇲🇽',
+  rival: 'México', rivalSlug: 'mexico',
   marcador: '1-0', fecha: '28 mar', lugar: 'Quito · Atahualpa', tipo: 'Amistoso',
 };
 const proximo = {
-  rival: 'Uzbekistán', flagLocal: '🇪🇨', flagRival: '🇺🇿',
+  rival: 'Uzbekistán', rivalSlug: 'uzbekistan',
   fecha: '12 jun', lugar: 'Atlanta · Mercedes-Benz Stadium · 19:00 ET',
   tipo: 'J1 Mundial', href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',
 };
@@ -98,12 +99,7 @@ const historia = [
   { kicker: '2022 · Catar',       title: 'Grupos',  caption: 'Catar-Países Bajos-Senegal · 4 pts · eliminado por gol diferencia.', variant: 'default' as const },
 ];
 
-const flag = (e: Equipo) => {
-  const map: Record<string, string> = {
-    EC: '🇪🇨', GB: '🏴', CI: '🇨🇮', UZ: '🇺🇿',
-  };
-  return map[e.pais] ?? '⚽';
-};
+// Bandera del equipo: usar flagCode(slug) → <TeamFlag>.
 </script>
 
 <template>
@@ -124,7 +120,9 @@ const flag = (e: Equipo) => {
       <div class="eq-hero__inner">
         <div class="eq-hero__left">
           <div class="eq-hero__head">
-            <div class="eq-hero__crest"><span>{{ flag(equipo) }}</span></div>
+            <div class="eq-hero__crest">
+              <TeamFlag :flag-code="flagCode(equipo.slug)" :name="equipo.nombre" :size="120" :rounded="50" />
+            </div>
             <div>
               <span class="eq-hero__kicker">Selección de {{ equipo.nombre }}</span>
               <h1 class="eq-hero__title">{{ equipo.apodo ?? equipo.nombre }}</h1>
@@ -153,10 +151,12 @@ const flag = (e: Equipo) => {
           <div class="eq-hero__match">
             <span class="eq-hero__metric-label muted">Último partido · {{ ultimo.tipo }}</span>
             <div class="eq-hero__match-row">
-              <div class="eq-hero__match-teams">
-                {{ ultimo.flagLocal }} {{ equipo.nombre }}
+              <div class="eq-hero__match-teams" style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <TeamFlag :flag-code="flagCode(equipo.slug)" :name="equipo.nombre" :size="18" />
+                {{ equipo.nombre }}
                 <span class="vs">vs</span>
-                {{ ultimo.flagRival }} {{ ultimo.rival }}
+                <TeamFlag :flag-code="flagCode(ultimo.rivalSlug)" :name="ultimo.rival" :size="18" />
+                {{ ultimo.rival }}
               </div>
               <span class="eq-hero__match-score">{{ ultimo.marcador }}</span>
             </div>
@@ -167,10 +167,12 @@ const flag = (e: Equipo) => {
             <span class="eq-hero__metric-label">Próximo · {{ proximo.tipo }}</span>
             <div class="eq-hero__match-row">
               <div>
-                <div class="eq-hero__match-teams">
-                  {{ proximo.flagLocal }} {{ equipo.nombre }}
+                <div class="eq-hero__match-teams" style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
+                  <TeamFlag :flag-code="flagCode(equipo.slug)" :name="equipo.nombre" :size="18" />
+                  {{ equipo.nombre }}
                   <span class="vs vs--light">vs</span>
-                  {{ proximo.flagRival }} {{ proximo.rival }}
+                  <TeamFlag :flag-code="flagCode(proximo.rivalSlug)" :name="proximo.rival" :size="18" />
+                  {{ proximo.rival }}
                 </div>
                 <span class="eq-hero__metric-cap eq-hero__metric-cap--light">{{ proximo.lugar }}</span>
               </div>

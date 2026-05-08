@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Equipo, Jugador, Plantilla } from '~/types/api';
 import { buildBreadcrumbList, injectSchema } from '~/composables/useSchema';
+import { flagCode } from '~/utils/flag-codes';
 
 const route = useRoute();
 const jugSlug = route.params.slug as string;
@@ -29,8 +30,7 @@ const posicionDetalle = ficha?.posicionDetalle ?? jugador.value.posicion;
 const esCapitan = ficha?.capitan ?? false;
 
 // Helpers
-const flagMap: Record<string, string> = { EC: '🇪🇨', GB: '🏴', CI: '🇨🇮', UZ: '🇺🇿', AR: '🇦🇷' };
-const flag = (equipo.value && flagMap[equipo.value.pais]) || '⚽';
+const seleccionFlagCode = equipo.value ? flagCode(equipo.value.slug) : '';
 const pieMap: Record<string, string> = { izquierdo: 'Izquierdo', derecho: 'Derecho', ambidiestro: 'Ambidiestro' };
 const pieLabel = pieMap[jugador.value.pieDominante ?? 'derecho'];
 const valor = jugador.value.valorMercado ? `€${(jugador.value.valorMercado.monto / 1_000_000).toFixed(0)}M` : '—';
@@ -129,7 +129,10 @@ const periodo = (desde: string, hasta?: string) => `${yyyy(desde)} – ${hasta ?
                   <div class="jp-grid2__val">{{ jugador.clubActual.nombre }}</div>
                 </div>
                 <div v-if="equipo" class="jp-grid2__cell">
-                  <span class="jp-grid2__lab">{{ flag }} Selección</span>
+                  <span class="jp-grid2__lab" style="display:inline-flex;align-items:center;gap:6px">
+                    <TeamFlag :flag-code="seleccionFlagCode" :name="equipo!.nombre" :size="14" />
+                    Selección
+                  </span>
                   <div class="jp-grid2__val">{{ equipo.nombre }}</div>
                 </div>
               </div>
