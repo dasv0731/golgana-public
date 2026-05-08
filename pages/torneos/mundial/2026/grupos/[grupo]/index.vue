@@ -25,10 +25,12 @@ injectSchema([
 // Metadatos visuales por selección (mock hasta cablear al CMS)
 type SeleMeta = { accent: string; dato: { num: string; texto: string }; prob: number };
 const seleMap: Record<string, SeleMeta> = {
-  ecuador:           { accent: 'var(--color-primary-green)', dato: { num: '11', texto: 'invicto de local en Quito' },        prob: 68 },
+  ecuador:           { accent: 'var(--color-primary-green)', dato: { num: '11', texto: 'invicto de local en Quito' },        prob: 54 },
+  alemania:          { accent: '#000000',                     dato: { num: '4×', texto: 'campeón del mundo (1954,74,90,14)' }, prob: 79 },
+  'costa-de-marfil': { accent: '#ff8200',                     dato: { num: '2×', texto: 'campeón África 2023 y 2025' },       prob: 38 },
+  curazao:           { accent: '#0033A0',                     dato: { num: '1°', texto: 'su primer Mundial en la historia' }, prob: 11 },
   inglaterra:        { accent: '#c8102e',                     dato: { num: '68', texto: 'goles de Kane, máximo histórico' },  prob: 88 },
-  'costa-de-marfil': { accent: '#ff8200',                     dato: { num: '2×', texto: 'campeón África 2023 y 2025' },       prob: 31 },
-  uzbekistan:        { accent: '#1eb53a',                     dato: { num: '1°', texto: 'su primer Mundial en la historia' }, prob: 13 },
+  uzbekistan:        { accent: '#1eb53a',                     dato: { num: '1°', texto: 'su primer Mundial en la historia' }, prob: 32 },
 };
 const meta = (slug: string): SeleMeta => seleMap[slug] ?? { accent: 'var(--color-primary-green)', dato: { num: '—', texto: '' }, prob: 0 };
 
@@ -36,15 +38,15 @@ const meta = (slug: string): SeleMeta => seleMap[slug] ?? { accent: 'var(--color
 const formaMap = { W: { letra: 'G', cls: 'streak__b--w' }, D: { letra: 'E', cls: 'streak__b--d' }, L: { letra: 'P', cls: 'streak__b--l' } } as const;
 
 // FIFA rank mock (no está en JSON aún)
-const fifaRank: Record<string, string> = { inglaterra: '4°', ecuador: '25°', 'costa-de-marfil': '42°', uzbekistan: '58°' };
+const fifaRank: Record<string, string> = { alemania: '10°', ecuador: '25°', 'costa-de-marfil': '42°', curazao: '82°', inglaterra: '4°', uzbekistan: '58°' };
 
 // Próximo partido del grupo (mock; idealmente desde API filtrando por fecha)
 const proximo = {
-  jornada: 'J1 · 12 jun · 19:00 ET',
-  local:  { slug: 'ecuador',     nombre: 'Ecuador' },
-  visita: { slug: 'uzbekistan',  nombre: 'Uzbekistán' },
-  sede: 'Mercedes-Benz Stadium · Atlanta',
-  href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',
+  jornada: 'J1 · 14 jun · 18:00 ET',
+  local:  { slug: 'costa-de-marfil', nombre: 'Costa de Marfil' },
+  visita: { slug: 'ecuador',         nombre: 'Ecuador' },
+  sede: 'Lincoln Financial Field · Philadelphia',
+  href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/',
 };
 
 // Fixture detallado (sede + horario + variante visual)
@@ -58,12 +60,12 @@ type FixtureItem = {
   variant: 'dark' | 'green' | 'default';
 };
 const fixture: FixtureItem[] = [
-  { jornada: 'J1 · 12 jun · 15:00 ET · Toronto',           sede: 'BMO Field',                   hora: '16:00', local: { slug: 'inglaterra',       nombre: 'Inglaterra' }, visita: { slug: 'costa-de-marfil', nombre: 'C. Marfil' },  href: '/torneos/mundial/2026/grupos/grupo-d/inglaterra-vs-costa-de-marfil-j1/', variant: 'dark' },
-  { jornada: 'J1 · 12 jun · 19:00 ET · Atlanta',           sede: 'Mercedes-Benz Stadium',       hora: '19:00', local: { slug: 'ecuador',          nombre: 'Ecuador' },    visita: { slug: 'uzbekistan',      nombre: 'Uzbekistán' }, href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',          variant: 'green' },
-  { jornada: 'J2 · 17 jun · Filadelfia',                   sede: 'Lincoln Financial Field',     hora: '15:00', local: { slug: 'inglaterra',       nombre: 'Inglaterra' }, visita: { slug: 'ecuador',         nombre: 'Ecuador' },    href: '#', variant: 'default' },
-  { jornada: 'J2 · 18 jun · Houston',                      sede: 'NRG Stadium',                 hora: '13:00', local: { slug: 'costa-de-marfil',  nombre: 'C. Marfil' },  visita: { slug: 'uzbekistan',      nombre: 'Uzbekistán' }, href: '#', variant: 'default' },
-  { jornada: 'J3 · 23 jun · Toronto · Simultáneo',         sede: 'BMO Field',                   hora: '15:00', local: { slug: 'ecuador',          nombre: 'Ecuador' },    visita: { slug: 'costa-de-marfil', nombre: 'C. Marfil' },  href: '#', variant: 'default' },
-  { jornada: 'J3 · 23 jun · Atlanta · Simultáneo',         sede: 'Mercedes-Benz Stadium',       hora: '15:00', local: { slug: 'inglaterra',       nombre: 'Inglaterra' }, visita: { slug: 'uzbekistan',      nombre: 'Uzbekistán' }, href: '#', variant: 'default' },
+  { jornada: 'J1 · 14 jun · 12:00 CT · Houston',           sede: 'NRG Stadium',                 hora: '12:00', local: { slug: 'alemania',         nombre: 'Alemania' },        visita: { slug: 'curazao',          nombre: 'Curazao' },          href: '/torneos/mundial/2026/grupos/grupo-e/alemania-vs-curazao-j1/',           variant: 'dark'  },
+  { jornada: 'J1 · 14 jun · 18:00 ET · Philadelphia',      sede: 'Lincoln Financial Field',     hora: '18:00', local: { slug: 'costa-de-marfil',  nombre: 'C. Marfil' },        visita: { slug: 'ecuador',          nombre: 'Ecuador' },          href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/',     variant: 'green' },
+  { jornada: 'J2 · 20 jun · 15:00 ET · Toronto',           sede: 'BMO Field',                   hora: '15:00', local: { slug: 'alemania',         nombre: 'Alemania' },        visita: { slug: 'costa-de-marfil',  nombre: 'C. Marfil' },        href: '/torneos/mundial/2026/grupos/grupo-e/alemania-vs-costa-de-marfil-j2/',   variant: 'default' },
+  { jornada: 'J2 · 20 jun · 21:00 CT · Kansas City',       sede: 'Arrowhead Stadium',           hora: '21:00', local: { slug: 'ecuador',          nombre: 'Ecuador' },          visita: { slug: 'curazao',          nombre: 'Curazao' },          href: '/torneos/mundial/2026/grupos/grupo-e/ecuador-vs-curazao-j2/',             variant: 'default' },
+  { jornada: 'J3 · 25 jun · 15:00 ET · Philadelphia',      sede: 'Lincoln Financial Field',     hora: '15:00', local: { slug: 'curazao',          nombre: 'Curazao' },          visita: { slug: 'costa-de-marfil',  nombre: 'C. Marfil' },        href: '/torneos/mundial/2026/grupos/grupo-e/curazao-vs-costa-de-marfil-j3/',     variant: 'default' },
+  { jornada: 'J3 · 25 jun · 15:00 ET · Nueva Jersey',      sede: 'MetLife Stadium',             hora: '15:00', local: { slug: 'ecuador',          nombre: 'Ecuador' },          visita: { slug: 'alemania',         nombre: 'Alemania' },         href: '/torneos/mundial/2026/grupos/grupo-e/ecuador-vs-alemania-j3/',            variant: 'default' },
 ];
 
 const datos = [

@@ -26,15 +26,15 @@ const ultimo = {
   marcador: '1-0', fecha: '28 mar', lugar: 'Quito · Atahualpa', tipo: 'Amistoso',
 };
 const proximo = {
-  rival: 'Uzbekistán', rivalSlug: 'uzbekistan',
-  fecha: '12 jun', lugar: 'Atlanta · Mercedes-Benz Stadium · 19:00 ET',
-  tipo: 'J1 Mundial', href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',
+  rival: 'Costa de Marfil', rivalSlug: 'costa-de-marfil',
+  fecha: '14 jun', lugar: 'Philadelphia · Lincoln Financial Field · 18:00 ET',
+  tipo: 'J1 Mundial', href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/',
 };
 
 const fixture = [
-  { jornada: 'J1 · 12 jun', rival: 'Uzbekistán', sede: '19:00 ET · Atlanta · Mercedes-Benz', prob: 82, variant: 'green' as const, chip: '82% probabilidad de victoria' },
-  { jornada: 'J2 · 17 jun', rival: 'Inglaterra',  sede: '15:00 ET · Filadelfia · Lincoln Financial', prob: 28, variant: 'default' as const, chip: '28% probabilidad de victoria', chipClass: 'pchip pchip--out' },
-  { jornada: 'J3 · 23 jun', rival: 'Costa de Marfil', sede: '15:00 ET · Toronto · BMO Field', prob: 54, variant: 'default' as const, chip: '54% probabilidad de victoria' },
+  { jornada: 'J1 · 14 jun', rival: 'Costa de Marfil', sede: '18:00 ET · Philadelphia · Lincoln Financial', prob: 54, variant: 'green' as const, chip: '54% probabilidad de victoria' },
+  { jornada: 'J2 · 20 jun', rival: 'Curazao',         sede: '21:00 ET · Kansas City · Arrowhead',           prob: 78, variant: 'default' as const, chip: '78% probabilidad de victoria' },
+  { jornada: 'J3 · 25 jun', rival: 'Alemania',        sede: '15:00 ET · Nueva Jersey · MetLife',            prob: 22, variant: 'default' as const, chip: '22% probabilidad de victoria', chipClass: 'pchip pchip--out' },
 ];
 
 const racha = [

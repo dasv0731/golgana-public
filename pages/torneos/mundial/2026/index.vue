@@ -55,17 +55,17 @@ const heroStats = [
 const inauguracion = {
   fecha: '11 jun', hora: '14:00', etiqueta: '11 JUN · J1',
   local:    { slug: 'mexico',     name: 'México',    rol: 'LOCAL'   },
-  visita:   { slug: 'marruecos',  name: 'Marruecos', rol: 'VISITA'  },
+  visita:   { slug: 'sudafrica',  name: 'Sudáfrica', rol: 'VISITA'  },
   sede: 'Estadio Azteca · CDMX · 87.000',
-  href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/',
+  href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-sudafrica-j1/',
 };
 const proximoTri = {
-  etiqueta: '12 JUN · GRUPO D',
-  local:  { slug: 'ecuador',    name: 'Ecuador',    rol: 'J1'    },
-  visita: { slug: 'uzbekistan', name: 'Uzbekistán', rol: 'DEBUT' },
-  hora: '19:00',
-  sede: 'Mercedes-Benz Stadium · Atlanta',
-  href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/',
+  etiqueta: '14 JUN · GRUPO E',
+  local:  { slug: 'costa-de-marfil', name: 'Costa de Marfil', rol: 'LOCAL' },
+  visita: { slug: 'ecuador',         name: 'Ecuador',         rol: 'J1'    },
+  hora: '18:00',
+  sede: 'Lincoln Financial Field · Philadelphia',
+  href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/',
 };
 
 // Countdown reactivo (cliente)
@@ -87,11 +87,11 @@ const cd = computed(() => {
 
 // Fixture destacado (mock)
 const fixtureDestacado = [
-  { variant: 'dark' as const,  cols: 6, kicker: 'Inauguración · 11 jun · 14:00 ET', sede: 'Estadio Azteca · CDMX', grupo: 'Grupo A', local: { slug: 'mexico',           name: 'México' },     visita: { slug: 'marruecos',  name: 'Marruecos' },  jornada: 'J1',     href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/' },
-  { variant: 'green' as const, cols: 6, kicker: '12 jun · 19:00 ET · Atlanta',      sede: 'Mercedes-Benz Stadium', grupo: 'Grupo D', local: { slug: 'ecuador',          name: 'Ecuador' },    visita: { slug: 'uzbekistan', name: 'Uzbekistán' }, jornada: 'J1', href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/' },
-  { variant: 'plain' as const, cols: 4, kicker: '12 jun · MetLife',                 hora: '20:00', local: { slug: 'argentina',        name: 'Argentina' },  visita: { slug: 'suiza',           name: 'Suiza' },      href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Filadelfia',              hora: '16:00', local: { slug: 'espana',           name: 'España' },     visita: { slug: 'senegal',         name: 'Senegal' },    href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '14 jun · Toronto',                 hora: '15:00', local: { slug: 'inglaterra',       name: 'Inglaterra' }, visita: { slug: 'costa-de-marfil', name: 'C. Marfil' },  href: '#' },
+  { variant: 'dark' as const,  cols: 6, kicker: 'Inauguración · 11 jun · 14:00',   sede: 'Estadio Azteca · CDMX',          grupo: 'Grupo A', local: { slug: 'mexico',          name: 'México' },         visita: { slug: 'sudafrica',       name: 'Sudáfrica' },     jornada: 'J1', href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-sudafrica-j1/' },
+  { variant: 'green' as const, cols: 6, kicker: 'Debut Tri · 14 jun · 18:00 ET',   sede: 'Lincoln Financial Field · Philly', grupo: 'Grupo E', local: { slug: 'costa-de-marfil', name: 'Costa de Marfil' }, visita: { slug: 'ecuador',         name: 'Ecuador' },        jornada: 'J1', href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '16 jun · Kansas City',            hora: '20:00', local: { slug: 'argentina',        name: 'Argentina' },     visita: { slug: 'argelia',         name: 'Argelia' },     href: '/torneos/mundial/2026/grupos/grupo-j/argentina-vs-argelia-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '15 jun · Atlanta',                hora: '11:00', local: { slug: 'espana',           name: 'España' },        visita: { slug: 'cabo-verde',      name: 'Cabo Verde' },  href: '/torneos/mundial/2026/grupos/grupo-h/espana-vs-cabo-verde-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Nueva Jersey',           hora: '17:00', local: { slug: 'brasil',           name: 'Brasil' },        visita: { slug: 'marruecos',       name: 'Marruecos' },   href: '/torneos/mundial/2026/grupos/grupo-c/brasil-vs-marruecos-j1/' },
 ];
 
 // Favoritos
@@ -125,7 +125,7 @@ const sedesDestacadas = computed(() => {
 
 // La Tri
 const triDebut = {
-  fecha: '12 jun', sub: 'vs Uzbekistán · Atlanta · 19:00 ET',
+  fecha: '14 jun', sub: 'vs Costa de Marfil · Philadelphia · 18:00 ET',
 };
 const triProb = '68%';
 
@@ -134,7 +134,7 @@ const cobertura = {
   destacadas: [
     { kicker: 'Análisis · 8 min',  title: 'Cómo Beccacece blindó el centro del campo',           meta: '2 de mayo · Por D. Granda', img: '/img/news-placeholder.svg' },
     { kicker: 'Reportaje · 12 min', title: 'Atlanta, la sede que adoptó a la Tri',               meta: '28 abr · Por A. Mejía',     img: '/img/hero-placeholder.svg' },
-    { kicker: 'Opinión · 5 min',    title: 'Por qué Inglaterra no es invencible en el Grupo D',  meta: '25 abr · Por R. Estrada',   img: '/img/stadium-placeholder.svg' },
+    { kicker: 'Opinión · 5 min',    title: 'Por qué Alemania no es invencible en el Grupo E',    meta: '25 abr · Por R. Estrada',   img: '/img/stadium-placeholder.svg' },
   ],
   largas: [
     { kicker: 'Crónica · 6 min', title: 'Páez vs Bellingham: el duelo de los 10 que define el grupo', body: 'Dos enganches modernos, dos generaciones, una misma franja. Cómo se preparan ambos para el cara a cara del 18 de junio.' },
@@ -276,7 +276,7 @@ const stadiumImg = '/img/stadium-placeholder.svg';
           <span class="pro-sec-head__kicker">Fase de grupos · 12 grupos · 4 equipos</span>
           <h2 class="pro-sec-head__title">El sorteo en 12 grupos</h2>
         </div>
-        <NuxtLink to="/torneos/mundial/2026/grupos/grupo-d/" class="pro-sec-head__cta">Ver Grupo D →</NuxtLink>
+        <NuxtLink to="/torneos/mundial/2026/grupos/grupo-e/" class="pro-sec-head__cta">Ver Grupo E →</NuxtLink>
       </div>
 
       <div class="bento" v-if="gruposOrdenados.length">
@@ -438,7 +438,7 @@ const stadiumImg = '/img/stadium-placeholder.svg';
 
       <BentoGrid>
         <article class="tile tile--dark b-c6 wc-tri__hero">
-          <span class="tile__kicker">Grupo D · 4° Mundial</span>
+          <span class="tile__kicker">Grupo E · 4° Mundial</span>
           <h3 class="tile__title wc-tri__hero-title">La Tri busca su segundo octavos</h3>
           <p class="tile__caption wc-tri__hero-txt">
             Beccacece arma una selección con base de Mundial sub-20 2019. Caicedo capitán, Gonzalo Plata

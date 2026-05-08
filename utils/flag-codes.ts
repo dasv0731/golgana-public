@@ -3,86 +3,85 @@
  * la librería `flag-icons` (clases CSS `fi fi-<iso2>`).
  *
  * Excepciones notables:
- *  - `inglaterra` → `gb-eng` (England, Home Nation), no `gb` (UK).
- *  - `usa` → `us`.
- *  - `paises-bajos` → `nl`, `arabia-saudita` → `sa`, etc.
+ *  - `inglaterra` → `gb-eng`, `escocia` → `gb-sct` (Home Nations, no `gb` UK).
+ *  - `republica-del-congo` → `cg` (Brazzaville). `rd-congo` → `cd` (Kinshasa).
+ *  - `usa` → `us`, `paises-bajos` → `nl`, `arabia-saudita` → `sa`.
  *
  * Cuando el backend exponga `equipo.flagCode` directamente, este mapping
- * se vuelve fallback. Por ahora derivamos del slug.
+ * se vuelve fallback.
  */
 const SLUG_TO_FLAG_CODE: Record<string, string> = {
-  // Grupo D (Mundial 2026)
-  ecuador: 'ec',
-  inglaterra: 'gb-eng',
-  'costa-de-marfil': 'ci',
-  uzbekistan: 'uz',
-
+  // Sorteo real Mundial 2026 (12 grupos)
   // Grupo A
   mexico: 'mx',
-  canada: 'ca',
-  marruecos: 'ma',
-  iran: 'ir',
-
-  // Grupo B
-  espana: 'es',
-  senegal: 'sn',
-  'costa-rica': 'cr',
-  'arabia-saudita': 'sa',
-
-  // Grupo C
-  usa: 'us',
-  japon: 'jp',
-  dinamarca: 'dk',
-  'rd-congo': 'cd',
-
-  // Grupo E
-  francia: 'fr',
-  colombia: 'co',
-  argelia: 'dz',
-  'nueva-zelanda': 'nz',
-
-  // Grupo F
-  argentina: 'ar',
-  suiza: 'ch',
-  egipto: 'eg',
-  panama: 'pa',
-
-  // Grupo G
-  alemania: 'de',
-  'corea-del-sur': 'kr',
-  eslovaquia: 'sk',
-  curazao: 'cw',
-
-  // Grupo H
-  brasil: 'br',
-  chile: 'cl',
-  camerun: 'cm',
-  jordania: 'jo',
-
-  // Grupo I
-  portugal: 'pt',
   sudafrica: 'za',
+  'corea-del-sur': 'kr',
+  'republica-checa': 'cz',
+  // Grupo B
+  canada: 'ca',
+  'bosnia-herzegovina': 'ba',
   catar: 'qa',
-
-  // Grupo J
-  belgica: 'be',
-  uruguay: 'uy',
-  tunez: 'tn',
+  suiza: 'ch',
+  // Grupo C
+  brasil: 'br',
+  marruecos: 'ma',
   haiti: 'ht',
-
-  // Grupo K
-  'paises-bajos': 'nl',
-  australia: 'au',
-  nigeria: 'ng',
+  escocia: 'gb-sct',
+  // Grupo D
+  usa: 'us',
   paraguay: 'py',
-
+  australia: 'au',
+  turquia: 'tr',
+  // Grupo E
+  alemania: 'de',
+  curazao: 'cw',
+  'costa-de-marfil': 'ci',
+  ecuador: 'ec',
+  // Grupo F
+  'paises-bajos': 'nl',
+  japon: 'jp',
+  suecia: 'se',
+  tunez: 'tn',
+  // Grupo G
+  belgica: 'be',
+  egipto: 'eg',
+  iran: 'ir',
+  'nueva-zelanda': 'nz',
+  // Grupo H
+  espana: 'es',
+  'cabo-verde': 'cv',
+  'arabia-saudita': 'sa',
+  uruguay: 'uy',
+  // Grupo I
+  francia: 'fr',
+  senegal: 'sn',
+  irak: 'iq',
+  noruega: 'no',
+  // Grupo J
+  argentina: 'ar',
+  argelia: 'dz',
+  austria: 'at',
+  jordania: 'jo',
+  // Grupo K
+  portugal: 'pt',
+  'republica-del-congo': 'cg',
+  uzbekistan: 'uz',
+  colombia: 'co',
   // Grupo L
-  italia: 'it',
+  inglaterra: 'gb-eng',
   croacia: 'hr',
   ghana: 'gh',
-  'cabo-verde': 'cv',
+  panama: 'pa',
 
-  // Otros (eliminatorias, amistosos)
+  // Otros (eliminatorias, amistosos, no clasificados)
+  italia: 'it',
+  chile: 'cl',
+  camerun: 'cm',
+  nigeria: 'ng',
+  'rd-congo': 'cd',
+  eslovaquia: 'sk',
+  'costa-rica': 'cr',
+  dinamarca: 'dk',
   bolivia: 'bo',
   venezuela: 've',
   peru: 'pe',

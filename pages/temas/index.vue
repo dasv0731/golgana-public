@@ -1,13 +1,13 @@
 <script setup lang="ts">
 useSeo({
   title: 'Temas — Cobertura editorial Golgana',
-  description: 'Temas y clusters editoriales: Mundial 2026, Selección Ecuatoriana, Grupo D, ídolos y análisis.',
+  description: 'Temas y clusters editoriales: Mundial 2026, Selección Ecuatoriana, Grupo E, ídolos y análisis.',
 });
 
 const temas = [
   { slug: 'mundial-2026', nombre: 'Mundial 2026' },
   { slug: 'seleccion-ecuatoriana', nombre: 'Selección Ecuatoriana' },
-  { slug: 'grupo-d', nombre: 'Grupo D' },
+  { slug: 'grupo-e', nombre: 'Grupo E' },
   { slug: 'beccacece', nombre: 'Sebastián Beccacece' },
   { slug: 'caicedo', nombre: 'Moisés Caicedo' },
   { slug: 'la-tri-mundial', nombre: 'La Tri en el Mundial' },

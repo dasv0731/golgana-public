@@ -35,7 +35,7 @@ injectSchema(
         <div style="display:flex;flex-direction:column;gap:8px">
           <NuxtLink to="/torneos/mundial/2026/" class="btn btn--primary">Ver edición</NuxtLink>
           <NuxtLink to="/selecciones/ecuador/" class="btn">Selección Ecuador</NuxtLink>
-          <NuxtLink to="/torneos/mundial/2026/grupos/grupo-d/" class="btn">Grupo D</NuxtLink>
+          <NuxtLink to="/torneos/mundial/2026/grupos/grupo-e/" class="btn">Grupo E</NuxtLink>
         </div>
       </template>
     </ProHero>

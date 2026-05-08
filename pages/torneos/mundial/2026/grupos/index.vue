@@ -104,18 +104,18 @@ const contexto = [
 
 // Imperdibles
 const imperdibles = [
-  { variant: 'dark'  as const, cols: 6, kicker: 'Inauguración · 11 jun · 14:00', sede: 'Azteca · Grupo A',  local: { slug: 'mexico',     name: 'México' },     visita: { slug: 'marruecos',       name: 'Marruecos' },                  href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-marruecos-j1/' },
-  { variant: 'green' as const, cols: 6, kicker: 'Debut Tri · 12 jun · 19:00',     sede: 'Atlanta · Grupo D', local: { slug: 'ecuador',    name: 'Ecuador' },    visita: { slug: 'uzbekistan',      name: 'Uzbekistán' },                 href: '/torneos/mundial/2026/grupos/grupo-d/ecuador-vs-uzbekistan-j1/' },
-  { variant: 'plain' as const, cols: 4, kicker: '12 jun · MetLife',               local: { slug: 'argentina',  name: 'Argentina' }, visita: { slug: 'suiza',           name: 'Suiza' },                      href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Filadelfia',            local: { slug: 'espana',     name: 'España' },    visita: { slug: 'senegal',         name: 'Senegal' },                    href: '#' },
-  { variant: 'plain' as const, cols: 4, kicker: '18 jun · Houston · J2',          local: { slug: 'inglaterra', name: 'Inglaterra' }, visita: { slug: 'ecuador',        name: 'Ecuador', highlight: true },  href: '/torneos/mundial/2026/grupos/grupo-d/inglaterra-vs-ecuador-j2/' },
-  { variant: 'plain' as const, cols: 4, kicker: '14 jun · Toronto',               local: { slug: 'brasil',     name: 'Brasil' },   visita: { slug: 'camerun',         name: 'Camerún' },                    href: '#' },
+  { variant: 'dark'  as const, cols: 6, kicker: 'Inauguración · 11 jun · 14:00', sede: 'Azteca · Grupo A',         local: { slug: 'mexico',          name: 'México' },         visita: { slug: 'sudafrica',          name: 'Sudáfrica' },                          href: '/torneos/mundial/2026/grupos/grupo-a/mexico-vs-sudafrica-j1/' },
+  { variant: 'green' as const, cols: 6, kicker: 'Debut Tri · 14 jun · 18:00',    sede: 'Philadelphia · Grupo E',   local: { slug: 'costa-de-marfil', name: 'Costa de Marfil' }, visita: { slug: 'ecuador',            name: 'Ecuador' },                            href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '16 jun · Kansas City',          local: { slug: 'argentina',  name: 'Argentina' }, visita: { slug: 'argelia',         name: 'Argelia' },                                                                href: '/torneos/mundial/2026/grupos/grupo-j/argentina-vs-argelia-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '15 jun · Atlanta',              local: { slug: 'espana',     name: 'España' },     visita: { slug: 'cabo-verde',      name: 'Cabo Verde' },                                                             href: '/torneos/mundial/2026/grupos/grupo-h/espana-vs-cabo-verde-j1/' },
+  { variant: 'plain' as const, cols: 4, kicker: '25 jun · MetLife · J3',         local: { slug: 'ecuador',    name: 'Ecuador' },    visita: { slug: 'alemania',        name: 'Alemania', highlight: true },                                              href: '/torneos/mundial/2026/grupos/grupo-e/ecuador-vs-alemania-j3/' },
+  { variant: 'plain' as const, cols: 4, kicker: '13 jun · Nueva Jersey',         local: { slug: 'brasil',     name: 'Brasil' },     visita: { slug: 'marruecos',       name: 'Marruecos' },                                                              href: '/torneos/mundial/2026/grupos/grupo-c/brasil-vs-marruecos-j1/' },
 ];
 
 // Editorial (mock)
 const editorial = {
   destacadas: [
-    { kicker: 'Análisis Grupo D · 8 min',   title: 'Por qué Ecuador es 2° favorito en su grupo', meta: '2 may · Por D. Granda',   img: '/img/news-placeholder.svg' },
+    { kicker: 'Análisis Grupo E · 8 min',   title: 'Por qué Ecuador es 2° favorito en su grupo', meta: '2 may · Por D. Granda',   img: '/img/news-placeholder.svg' },
     { kicker: 'Reportaje Grupo F · 12 min', title: 'Argentina, la defensora que se reinventa',   meta: '28 abr · Por A. Mejía',   img: '/img/hero-placeholder.svg' },
     { kicker: 'Opinión Grupo A · 5 min',    title: 'México abre el Mundial: ¿presión o impulso?', meta: '25 abr · Por R. Estrada', img: '/img/stadium-placeholder.svg' },
   ],

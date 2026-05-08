@@ -60,9 +60,11 @@ injectSchema([
 
 const fifaRank: Record<string, string> = {
   ecuador: '25° FIFA · Conmebol',
-  uzbekistan: '58° FIFA · AFC · Debut',
-  inglaterra: '4° FIFA · UEFA',
+  alemania: '10° FIFA · UEFA',
   'costa-de-marfil': '42° FIFA · CAF',
+  curazao: '82° FIFA · Concacaf · Debut',
+  inglaterra: '4° FIFA · UEFA',
+  uzbekistan: '58° FIFA · AFC · Debut',
 };
 
 // Estado helpers
@@ -275,12 +277,12 @@ const repercusion = {
   cita: '"Ganamos sufriendo, pero ganamos. Eso vale oro en un Mundial."',
   citaAutor: `— ${partido.value.alineaciones?.local.dt.nombre ?? 'DT local'}, conferencia post-partido`,
   tablaGrupo: [
-    { pos: 1, slug: 'inglaterra',       nombre: 'Inglaterra', pts: 3 },
-    { pos: 2, slug: 'ecuador',          nombre: 'Ecuador',    pts: 3 },
-    { pos: 3, slug: 'costa-de-marfil',  nombre: 'C. Marfil',  pts: 0 },
-    { pos: 4, slug: 'uzbekistan',       nombre: 'Uzbekistán', pts: 0 },
+    { pos: 1, slug: 'alemania',         nombre: 'Alemania',  pts: 3 },
+    { pos: 2, slug: 'ecuador',          nombre: 'Ecuador',   pts: 3 },
+    { pos: 3, slug: 'costa-de-marfil',  nombre: 'C. Marfil', pts: 0 },
+    { pos: 4, slug: 'curazao',          nombre: 'Curazao',   pts: 0 },
   ],
-  proximo: { jornada: 'J2', fecha: '17 jun · 15:00 ET', local: { slug: 'inglaterra', name: 'Inglaterra' }, visita: { slug: 'ecuador', name: 'Ecuador' }, sede: 'Lincoln Financial Field · Filadelfia' },
+  proximo: { jornada: 'J2', fecha: '20 jun · 21:00 CT', local: { slug: 'ecuador', name: 'Ecuador' }, visita: { slug: 'curazao', name: 'Curazao' }, sede: 'Arrowhead Stadium · Kansas City' },
   audienciaTV: { num: '9.2M', cap: 'Espectadores en EC · récord histórico no-Conmebol' },
   redes: { num: '+218K', cap: `Tweets con #LaTri durante el partido. Pico al gol de ${goleadoresLocal.value[0]?.texto.split(' · ')[0] ?? 'Páez'}.` },
 };
