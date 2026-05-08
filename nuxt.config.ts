@@ -63,6 +63,8 @@ export default defineNuxtConfig({
     useBackend: process.env.NUXT_USE_BACKEND === 'true',
     cmsApiUrl: process.env.NUXT_CMS_API_URL ?? '',
     cmsApiKey: process.env.NUXT_CMS_API_KEY ?? '',
+    appsyncUrl: process.env.NUXT_APPSYNC_URL ?? '',
+    appsyncApiKey: process.env.NUXT_APPSYNC_API_KEY ?? '',
     revalidateSecret: process.env.NUXT_REVALIDATE_SECRET ?? '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://golgana.net',
