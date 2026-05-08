@@ -3,9 +3,31 @@ import type { Equipo } from '~/types/api';
 import { buildBreadcrumbList, buildSportsTeam, injectSchema } from '~/composables/useSchema';
 import { flagCode } from '~/utils/flag-codes';
 
+interface PartidoBase {
+  fecha: string;
+  fechaCorta: string;
+  hora: string;
+  rival: string;
+  rivalSlug: string;
+  competicion: string;
+  sede: string;
+  href: string;
+  esLocal: boolean;
+}
+type ProximoPartido = PartidoBase & { estado: string };
+type UltimoPartido  = PartidoBase & { resultado: string; marcadorLocal: number | null; marcadorVisitante: number | null };
+interface PartidosResp {
+  proximos: ProximoPartido[];
+  ultimos: UltimoPartido[];
+  fixture: ProximoPartido[];
+}
+
 const route = useRoute();
 const slug = route.params.slug as string;
-const { data: equipo } = await useFetch<Equipo>(`/api/selecciones/${slug}`);
+const [{ data: equipo }, { data: partidos }] = await Promise.all([
+  useFetch<Equipo>(`/api/selecciones/${slug}`),
+  useFetch<PartidosResp>(`/api/selecciones/${slug}/partidos`),
+]);
 if (!equipo.value) throw createError({ statusCode: 404 });
 
 useSeo(equipo.value.seo);
@@ -20,22 +42,15 @@ injectSchema([
   buildSportsTeam(equipo.value),
 ]);
 
-// Mock data específico del Mundial (luego se mueve a la API)
-const ultimo = {
-  rival: 'México', rivalSlug: 'mexico',
-  marcador: '1-0', fecha: '28 mar', lugar: 'Quito · Atahualpa', tipo: 'Amistoso',
-};
-const proximo = {
-  rival: 'Costa de Marfil', rivalSlug: 'costa-de-marfil',
-  fecha: '14 jun', lugar: 'Philadelphia · Lincoln Financial Field · 18:00 ET',
-  tipo: 'J1 Mundial', href: '/torneos/mundial/2026/grupos/grupo-e/costa-de-marfil-vs-ecuador-j1/',
-};
+// Hero — derivado del endpoint /api/selecciones/<slug>/partidos
+const ultimo = computed(() => partidos.value?.ultimos?.[0] ?? null);
+const proximo = computed(() => partidos.value?.proximos?.[0] ?? null);
 
-const fixture = [
-  { jornada: 'J1 · 14 jun', rival: 'Costa de Marfil', sede: '18:00 ET · Philadelphia · Lincoln Financial', prob: 54, variant: 'green' as const, chip: '54% probabilidad de victoria' },
-  { jornada: 'J2 · 20 jun', rival: 'Curazao',         sede: '21:00 ET · Kansas City · Arrowhead',           prob: 78, variant: 'default' as const, chip: '78% probabilidad de victoria' },
-  { jornada: 'J3 · 25 jun', rival: 'Alemania',        sede: '15:00 ET · Nueva Jersey · MetLife',            prob: 22, variant: 'default' as const, chip: '22% probabilidad de victoria', chipClass: 'pchip pchip--out' },
-];
+// Fixture — todos los partidos Mundial 2026 del equipo
+const fixture = computed(() => partidos.value?.fixture ?? []);
+
+// Marca el partido más cercano (próximo) como variante "green" en la grilla
+const proximoSlug = computed(() => proximo.value?.href ?? '');
 
 const racha = [
   { r: 'G' }, { r: 'G' }, { r: 'E' }, { r: 'G' }, { r: 'P' },
@@ -148,8 +163,8 @@ const historia = [
         </div>
 
         <aside class="eq-hero__side">
-          <div class="eq-hero__match">
-            <span class="eq-hero__metric-label muted">Último partido · {{ ultimo.tipo }}</span>
+          <div v-if="ultimo" class="eq-hero__match">
+            <span class="eq-hero__metric-label muted">Último partido · {{ ultimo.competicion }}</span>
             <div class="eq-hero__match-row">
               <div class="eq-hero__match-teams" style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
                 <TeamFlag :flag-code="flagCode(equipo.slug)" :name="equipo.nombre" :size="18" />
@@ -158,13 +173,17 @@ const historia = [
                 <TeamFlag :flag-code="flagCode(ultimo.rivalSlug)" :name="ultimo.rival" :size="18" />
                 {{ ultimo.rival }}
               </div>
-              <span class="eq-hero__match-score">{{ ultimo.marcador }}</span>
+              <span class="eq-hero__match-score">{{ ultimo.resultado }}</span>
             </div>
-            <span class="eq-hero__metric-cap">{{ ultimo.fecha }} · {{ ultimo.lugar }}</span>
+            <span class="eq-hero__metric-cap">{{ ultimo.fechaCorta }} · {{ ultimo.sede }}</span>
+          </div>
+          <div v-else class="eq-hero__match">
+            <span class="eq-hero__metric-label muted">Último partido</span>
+            <p class="eq-hero__metric-cap">Sin partidos finalizados aún.</p>
           </div>
 
-          <div class="eq-hero__match eq-hero__match--accent">
-            <span class="eq-hero__metric-label">Próximo · {{ proximo.tipo }}</span>
+          <div v-if="proximo" class="eq-hero__match eq-hero__match--accent">
+            <span class="eq-hero__metric-label">Próximo · {{ proximo.competicion }}</span>
             <div class="eq-hero__match-row">
               <div>
                 <div class="eq-hero__match-teams" style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -174,11 +193,15 @@ const historia = [
                   <TeamFlag :flag-code="flagCode(proximo.rivalSlug)" :name="proximo.rival" :size="18" />
                   {{ proximo.rival }}
                 </div>
-                <span class="eq-hero__metric-cap eq-hero__metric-cap--light">{{ proximo.lugar }}</span>
+                <span class="eq-hero__metric-cap eq-hero__metric-cap--light">{{ proximo.sede }} · {{ proximo.hora }}</span>
               </div>
-              <div class="eq-hero__match-date">{{ proximo.fecha }}</div>
+              <div class="eq-hero__match-date">{{ proximo.fechaCorta }}</div>
             </div>
             <a :href="proximo.href" class="eq-hero__match-cta">Ver previa →</a>
+          </div>
+          <div v-else class="eq-hero__match eq-hero__match--accent">
+            <span class="eq-hero__metric-label">Próximo</span>
+            <p class="eq-hero__metric-cap eq-hero__metric-cap--light">Por confirmar.</p>
           </div>
         </aside>
       </div>
@@ -258,26 +281,36 @@ const historia = [
       <div class="pro-sec-head">
         <div class="pro-sec-head__l">
           <span class="pro-sec-head__kicker">Calendario fase de grupos</span>
-          <h2 class="pro-sec-head__title">3 partidos · 11 días</h2>
+          <h2 class="pro-sec-head__title">{{ fixture.length }} partidos</h2>
         </div>
+        <NuxtLink
+          :to="`/selecciones/${equipo.slug}/partidos/`"
+          class="pro-sec-head__cta"
+        >Ver calendario completo →</NuxtLink>
       </div>
 
-      <BentoGrid>
+      <BentoGrid v-if="fixture.length > 0">
         <a
           v-for="(p, i) in fixture"
           :key="i"
           class="tile b-c4"
-          :class="p.variant === 'green' ? 'tile--green' : ''"
-          href="#"
+          :class="p.href === proximoSlug ? 'tile--green' : ''"
+          :href="p.href"
         >
-          <span class="tile__kicker">{{ p.jornada }}</span>
-          <h3 class="tile__title fixture__rival">vs {{ p.rival }}</h3>
-          <p class="tile__caption">{{ p.sede }}</p>
-          <span :class="p.chipClass ?? (p.variant === 'green' ? 'pchip pchip--on-green' : 'pchip pchip--soft-green')">
-            {{ p.chip }}
+          <span class="tile__kicker">{{ p.competicion }} · {{ p.fechaCorta }}</span>
+          <h3 class="tile__title fixture__rival">
+            <span v-if="p.esLocal">vs {{ p.rival }}</span>
+            <span v-else>en casa de {{ p.rival }}</span>
+          </h3>
+          <p class="tile__caption">{{ p.hora }} · {{ p.sede }}</p>
+          <span
+            :class="p.href === proximoSlug ? 'pchip pchip--on-green' : 'pchip pchip--soft-green'"
+          >
+            {{ p.estado === 'finished' ? 'Finalizado' : p.estado === 'live' ? 'En vivo' : 'Programado' }}
           </span>
         </a>
       </BentoGrid>
+      <p v-else class="tile__caption">Aún no hay partidos cargados para esta selección.</p>
     </section>
 
     <!-- ESTILO -->
