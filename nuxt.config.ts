@@ -9,29 +9,31 @@ export default defineNuxtConfig({
     { path: '~/components', pathPrefix: false },
   ],
   routeRules: {
+    // Todo SSR con caché ISR. NO prerender (el preset aws-amplify falla
+    // resolviendo el path /static/*.html en runtime).
     '/':                                                  { isr: 3600 },
     '/torneos/':                                          { isr: 86400 },
-    '/torneos/mundial/':                                  { prerender: true },
+    '/torneos/mundial/':                                  { isr: 86400 },
     '/torneos/mundial/2026/':                             { isr: 1800 },
     '/torneos/mundial/2026/grupos/**':                    { isr: 600 },
     '/torneos/mundial/2026/calendario':                   { isr: 1800 },
     '/torneos/mundial/2026/goleadores':                   { isr: 1800 },
-    '/torneos/mundial/2026/sedes':                        { prerender: true },
+    '/torneos/mundial/2026/sedes':                        { isr: 86400 },
     '/torneos/mundial/2026/octavos/**':                   { isr: 600 },
     '/torneos/mundial/2026/cuartos/**':                   { isr: 600 },
     '/torneos/mundial/2026/semifinales/**':               { isr: 600 },
     '/torneos/mundial/2026/final/**':                     { isr: 600 },
-    '/torneos/mundial/campeones':                         { prerender: true },
+    '/torneos/mundial/campeones':                         { isr: 86400 },
     '/selecciones/':                                      { isr: 86400 },
     '/selecciones/**':                                    { isr: 1800 },
     '/jugadores/**':                                      { isr: 3600 },
     '/noticias/':                                         { isr: 600 },
-    '/noticias/**':                                       { prerender: true },
+    '/noticias/**':                                       { isr: 3600 },
     '/temas/**':                                          { isr: 3600 },
-    '/acerca-de':                                         { prerender: true },
-    '/contacto':                                          { prerender: true },
-    '/politica-privacidad':                               { prerender: true },
-    '/terminos':                                          { prerender: true },
+    '/acerca-de':                                         { isr: 86400 },
+    '/contacto':                                          { isr: 86400 },
+    '/politica-privacidad':                               { isr: 86400 },
+    '/terminos':                                          { isr: 86400 },
   },
   sitemap: {
     // hostname is read from runtimeConfig.public.siteUrl by @nuxtjs/sitemap v7
@@ -60,7 +62,10 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'aws-amplify',
-    prerender: { crawlLinks: true, routes: ['/'] },
+    // crawlLinks:false + routes:[] evita generar static/*.html que el Lambda
+    // runtime no puede leer (el static dir no se monta en /var/task). Todo
+    // es SSR + caché ISR via routeRules. Sin disk-based static fallback.
+    prerender: { crawlLinks: false, routes: [] },
   },
   runtimeConfig: {
     useBackend: process.env.NUXT_USE_BACKEND === 'true',
