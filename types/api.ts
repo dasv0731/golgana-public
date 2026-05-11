@@ -111,6 +111,78 @@ export interface Sede {
 }
 
 // === Equipo (CLUB o SELECCIÓN) ===
+
+// Sección "Cómo llega" + "Pieza clave"
+export interface EquipoResumen {
+  // 3 tiles (BentoGrid). Se renderiza si length > 0.
+  metricas?: Array<{
+    kicker: string;          // ej. "Eliminatorias"
+    valor: string;           // ej. "2°"
+    caption: string;         // ej. "Conmebol · 25 pts en 18 PJ"
+    tono?: 'green'|'dark'|'default';
+  }>;
+  // Racha últimos 10 amistosos. Se renderiza si forma.length > 0.
+  racha?: {
+    titulo: string;          // ej. "Racha sólida — 7G · 2E · 1P"
+    forma: Array<'G'|'E'|'P'>;
+    caption?: string;        // ej. "vs México (1-0) · Brasil (1-0)..."
+  };
+  // Pieza clave del equipo (un jugador). Se renderiza si presente.
+  piezaClave?: {
+    dorsal: number;
+    nombre: string;          // ej. "Moisés Caicedo"
+    rol: string;             // ej. "Capitán · Mediocentro · Chelsea"
+    jugadorSlug?: string;    // link a /jugadores/<slug>/ (opcional)
+  };
+}
+
+// Sección "Estilo"
+export interface EquipoEstilo {
+  formacion: string;         // "4-3-3"
+  chips?: Array<{
+    label: string;
+    tono?: 'green'|'out'|'dark'|'default';
+  }>;
+  lead?: string;             // párrafo de análisis táctico
+  stats?: Array<{
+    label: string;           // "Posesión"
+    valor: string;           // "54%"
+    width: number;           // 0-100 para la barra
+  }>;
+  // XI titular probable. Cada fila es una línea (DEL → POR).
+  xi?: {
+    filas: Array<Array<{
+      num: number;
+      nombre: string;        // apellido o nombre corto
+      capitan?: boolean;
+    }>>;
+    padding?: string[];      // CSS padding por fila si necesita centrarse
+  };
+}
+
+// Plantilla destacada (12 ptiles). Se renderiza si length > 0.
+export type EquipoPlantillaDestacada = Array<{
+  num: number;
+  pos: string;               // "POR", "DEF", "MED", "DEL", "CAP · MED"
+  nombre: string;
+  destacado?: boolean;       // outline verde + numbox verde
+  jugadorSlug?: string;      // link a /jugadores/<slug>/
+}>;
+
+// Editorial (lead + notas). Se renderiza si presente.
+export interface EquipoEditorial {
+  lead: { kicker: string; titulo: string; cuerpo: string; meta: string; href: string };
+  notas: Array<{ kicker: string; titulo: string; meta: string; href: string }>;
+}
+
+// Historia mundialista (4 tiles). Se renderiza si length > 0.
+export type EquipoHistoria = Array<{
+  kicker: string;            // "2006 · Alemania"
+  titulo: string;            // "Octavos"
+  caption: string;
+  destacado?: boolean;       // tile--green
+}>;
+
 export interface Equipo {
   slug: Slug;
   tipo: 'club'|'seleccion';
@@ -131,6 +203,15 @@ export interface Equipo {
   valorPlantilla?: { monto: number; moneda: 'EUR'|'USD' };
   rivalidades: Ref<'equipo'>[];
   estadisticasDestacadas?: HeroMetric[];
+
+  // Secciones del template /selecciones/<slug>/. Todas opcionales:
+  // si faltan, la sección se oculta. Llenar progresivamente por equipo.
+  resumen?: EquipoResumen;
+  estilo?: EquipoEstilo;
+  plantillaDestacada?: EquipoPlantillaDestacada;
+  editorial?: EquipoEditorial;
+  historia?: EquipoHistoria;
+
   seo: SeoBlock;
   faq: FaqEntry[];
 }

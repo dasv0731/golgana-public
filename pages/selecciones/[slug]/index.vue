@@ -52,67 +52,12 @@ const fixture = computed(() => partidos.value?.fixture ?? []);
 // Marca el partido más cercano (próximo) como variante "green" en la grilla
 const proximoSlug = computed(() => proximo.value?.href ?? '');
 
-const racha = [
-  { r: 'G' }, { r: 'G' }, { r: 'E' }, { r: 'G' }, { r: 'P' },
-  { r: 'G' }, { r: 'G' }, { r: 'E' }, { r: 'G' }, { r: 'G' },
-] as const;
-
-type XIRow = Array<{ num: number; name: string; cap?: boolean }>;
-const xi: { rows: XIRow[]; padding?: string[] } = {
-  rows: [
-    [{ num: 14, name: 'Plata' }, { num: 9, name: 'E. Valencia' }, { num: 19, name: 'J. Sarmiento' }],
-    [{ num: 23, name: 'M. Sarmiento' }, { num: 10, name: 'Páez' }, { num: 22, name: 'Caicedo (C)', cap: true }],
-    [{ num: 7, name: 'Estupiñán' }, { num: 3, name: 'Hincapié' }, { num: 4, name: 'Pacho' }, { num: 17, name: 'Preciado' }],
-    [{ num: 1, name: 'Galíndez' }],
-  ],
-  padding: ['', '0 14%', '', ''],
-};
-
-const stats = [
-  { label: 'Posesión', val: '54%', width: 54 },
-  { label: 'PPDA (presión)', val: '9.2', width: 78 },
-  { label: 'Recuperaciones campo rival', val: '7.1', width: 71 },
-  { label: 'xG por partido', val: '1.8', width: 63 },
-];
-
-const plantillaDestacada = [
-  { num: 1, pos: 'POR', name: 'Galíndez' },
-  { num: 4, pos: 'DEF', name: 'Pacho' },
-  { num: 3, pos: 'DEF', name: 'Hincapié' },
-  { num: 7, pos: 'DEF', name: 'Estupiñán' },
-  { num: 17, pos: 'DEF', name: 'Preciado' },
-  { num: 22, pos: 'CAP · MED', name: 'Caicedo', highlight: true, href: `/jugadores/moises-caicedo/` },
-  { num: 23, pos: 'MED', name: 'M. Sarmiento' },
-  { num: 10, pos: 'MED', name: 'Páez' },
-  { num: 8,  pos: 'MED', name: 'Franco' },
-  { num: 9,  pos: 'DEL', name: 'E. Valencia' },
-  { num: 14, pos: 'DEL', name: 'Plata' },
-  { num: 19, pos: 'DEL', name: 'J. Sarmiento' },
-];
-
-const editorial = {
-  lead: {
-    kicker: 'Análisis · 5 may',
-    title: 'Beccacece confirma el XI: Caicedo capitán y Páez de enganche libre frente a Uzbekistán',
-    body: 'El DT argentino sorprende con Páez de 10 y mantiene a Estupiñán pese a las dudas físicas. La práctica a puertas cerradas dejó pistas claras: presión alta desde el primer minuto y Plata por derecha como variante de desequilibrio.',
-    meta: 'Por Carlos Mosquera · 8 min lectura',
-    href: '#',
-  },
-  notas: [
-    { kicker: 'Crónica',     title: 'Pacho responde a Inglaterra: "No le tenemos miedo a Bellingham"',  meta: '4 may · 4 min',  href: '#' },
-    { kicker: 'Datos',       title: 'Por qué la Tri llega como mejor defensa de Conmebol',                meta: '3 may · 6 min',  href: '#' },
-    { kicker: 'Entrevista',  title: 'Kendry Páez: "Crecí viendo Mundiales, ahora me toca jugar uno"',     meta: '2 may · 12 min', href: '#' },
-    { kicker: 'Opinión',     title: '¿Hincapié o Mina como tercero detrás? El dilema de Beccacece',      meta: '1 may · 7 min',  href: '#' },
-    { kicker: 'Hinchada',    title: '22.000 ecuatorianos viajan a Atlanta: el operativo de la Tri Embajadora', meta: '30 abr · 5 min', href: '#' },
-  ],
-};
-
-const historia = [
-  { kicker: '2002 · Corea/Japón', title: 'Debut',   caption: 'Fase de grupos · 1G 2P · Eliminado.', variant: 'default' as const },
-  { kicker: '2006 · Alemania',    title: 'Octavos', caption: 'Mejor actuación · perdió 0-3 con Inglaterra.', variant: 'green' as const },
-  { kicker: '2014 · Brasil',      title: 'Grupos',  caption: 'Suiza-Honduras-Francia · 4 pts · eliminado por gol diferencia.', variant: 'default' as const },
-  { kicker: '2022 · Catar',       title: 'Grupos',  caption: 'Catar-Países Bajos-Senegal · 4 pts · eliminado por gol diferencia.', variant: 'default' as const },
-];
+// Secciones del equipo (todas opcionales en el JSON)
+const resumen = computed(() => equipo.value?.resumen ?? null);
+const estilo = computed(() => equipo.value?.estilo ?? null);
+const plantillaDestacada = computed(() => equipo.value?.plantillaDestacada ?? []);
+const editorial = computed(() => equipo.value?.editorial ?? null);
+const historia = computed(() => equipo.value?.historia ?? []);
 
 // Bandera del equipo: usar flagCode(slug) → <TeamFlag>.
 </script>
@@ -209,17 +154,21 @@ const historia = [
 
     <PageIndex
       :items="[
-        { label: 'Resumen', href: '#resumen' },
-        { label: 'Fixture', href: '#fixture' },
-        { label: 'Estilo', href: '#estilo' },
-        { label: 'Plantilla', href: '#plantilla' },
-        { label: 'Noticias', href: '#noticias' },
-        { label: 'Historia', href: '#historia' },
+        ...(resumen && (resumen.metricas?.length || resumen.racha || resumen.piezaClave) ? [{ label: 'Resumen', href: '#resumen' }] : []),
+        ...(fixture.length > 0 ? [{ label: 'Fixture', href: '#fixture' }] : []),
+        ...(estilo ? [{ label: 'Estilo', href: '#estilo' }] : []),
+        ...(plantillaDestacada.length > 0 ? [{ label: 'Plantilla', href: '#plantilla' }] : []),
+        ...(editorial ? [{ label: 'Noticias', href: '#noticias' }] : []),
+        ...(historia.length > 0 ? [{ label: 'Historia', href: '#historia' }] : []),
       ]"
     />
 
     <!-- RESUMEN -->
-    <section id="resumen" class="pro-section pro-container">
+    <section
+      v-if="resumen && (resumen.metricas?.length || resumen.racha || resumen.piezaClave)"
+      id="resumen"
+      class="pro-section pro-container"
+    >
       <div class="pro-sec-head">
         <div class="pro-sec-head__l">
           <span class="pro-sec-head__kicker">Cómo llega</span>
@@ -228,50 +177,44 @@ const historia = [
       </div>
 
       <BentoGrid>
-        <article class="tile tile--green b-c4">
-          <span class="tile__kicker">Eliminatorias</span>
-          <div class="tile__big-num">2°</div>
-          <p class="tile__caption">Conmebol · 25 pts en 18 PJ</p>
-        </article>
-        <article class="tile b-c4">
-          <span class="tile__kicker">Goles a favor</span>
-          <div class="tile__big-num accent">22</div>
-          <p class="tile__caption">3° mejor ataque eliminatorias</p>
-        </article>
-        <article class="tile tile--dark b-c4">
-          <span class="tile__kicker">Mundialistas activos</span>
-          <div class="tile__big-num">14</div>
-          <p class="tile__caption">Estuvieron en Qatar 2022</p>
+        <article
+          v-for="(m, i) in (resumen.metricas ?? [])"
+          :key="`m${i}`"
+          class="tile b-c4"
+          :class="m.tono === 'green' ? 'tile--green' : m.tono === 'dark' ? 'tile--dark' : ''"
+        >
+          <span class="tile__kicker">{{ m.kicker }}</span>
+          <div class="tile__big-num" :class="i === 1 ? 'accent' : ''">{{ m.valor }}</div>
+          <p class="tile__caption">{{ m.caption }}</p>
         </article>
 
-        <article class="tile b-c8">
-          <span class="tile__kicker">Forma últimos 10 amistosos</span>
-          <h3 class="tile__title">Racha sólida — 7G · 2E · 1P</h3>
+        <article v-if="resumen.racha?.forma?.length" class="tile b-c8">
+          <span class="tile__kicker">Forma últimos amistosos</span>
+          <h3 class="tile__title">{{ resumen.racha.titulo }}</h3>
           <span class="streak">
             <span
-              v-for="(s, i) in racha"
+              v-for="(r, i) in resumen.racha.forma"
               :key="i"
-              :class="[
-                'streak__b',
-                s.r === 'G' ? 'streak__b--w' : s.r === 'E' ? 'streak__b--d' : 'streak__b--l',
-              ]"
-            >{{ s.r }}</span>
+              :class="['streak__b', r === 'G' ? 'streak__b--w' : r === 'E' ? 'streak__b--d' : 'streak__b--l']"
+            >{{ r }}</span>
           </span>
-          <p class="tile__caption mt-sm">
-            vs México (1-0) · Brasil (1-0) · Italia (1-1) · Japón (2-1) · Portugal (1-2)
-          </p>
+          <p v-if="resumen.racha.caption" class="tile__caption mt-sm">{{ resumen.racha.caption }}</p>
         </article>
 
-        <article class="tile tile--dark b-c4 pieza-clave">
+        <article v-if="resumen.piezaClave" class="tile tile--dark b-c4 pieza-clave">
           <span class="tile__kicker">Pieza clave</span>
           <div class="pc__row">
-            <div class="pc__num">22</div>
+            <div class="pc__num">{{ resumen.piezaClave.dorsal }}</div>
             <div>
-              <h3 class="tile__title pc__name">Moisés Caicedo</h3>
-              <p class="pc__role">Capitán · Mediocentro · Chelsea</p>
+              <h3 class="tile__title pc__name">{{ resumen.piezaClave.nombre }}</h3>
+              <p class="pc__role">{{ resumen.piezaClave.rol }}</p>
             </div>
           </div>
-          <a href="/jugadores/moises-caicedo/" class="btn btn--primary pc__cta">Ver perfil →</a>
+          <NuxtLink
+            v-if="resumen.piezaClave.jugadorSlug"
+            :to="`/jugadores/${resumen.piezaClave.jugadorSlug}/`"
+            class="btn btn--primary pc__cta"
+          >Ver perfil →</NuxtLink>
         </article>
       </BentoGrid>
     </section>
@@ -314,7 +257,7 @@ const historia = [
     </section>
 
     <!-- ESTILO -->
-    <section id="estilo" class="pro-section pro-container">
+    <section v-if="estilo" id="estilo" class="pro-section pro-container">
       <div class="pro-sec-head">
         <div class="pro-sec-head__l">
           <span class="pro-sec-head__kicker">Sistema de {{ equipo.dt.nombre.split(' ').slice(-1)[0] }}</span>
@@ -324,50 +267,46 @@ const historia = [
 
       <BentoGrid>
         <article class="tile b-c7 estilo__txt">
-          <div class="chip-row">
-            <span class="pchip pchip--green">4-3-3</span>
-            <span class="pchip pchip--green">Presión alta</span>
-            <span class="pchip">Salida desde el fondo</span>
-            <span class="pchip">Pivote único</span>
-            <span class="pchip pchip--out">Transición vertical</span>
-            <span class="pchip pchip--dark">Bloque medio</span>
+          <div v-if="estilo.chips?.length" class="chip-row">
+            <span
+              v-for="(c, i) in estilo.chips"
+              :key="i"
+              class="pchip"
+              :class="c.tono === 'green' ? 'pchip--green' : c.tono === 'out' ? 'pchip--out' : c.tono === 'dark' ? 'pchip--dark' : ''"
+            >{{ c.label }}</span>
           </div>
-          <p class="estilo__lead">
-            El 4-3-3 de Beccacece se sostiene en tres pilares: Caicedo como pivote único que permite a Sarmiento e Hincapié subir,
-            una línea defensiva alta con Pacho e Hincapié leyendo el offside, y dos extremos abiertos —Plata por derecha,
-            Páez por izquierda— que generan superioridades. La identidad: presionar en campo rival y atacar el espacio cuando se recupera.
-          </p>
-          <div class="bars">
-            <div v-for="(s, i) in stats" :key="i" class="bar">
+          <p v-if="estilo.lead" class="estilo__lead">{{ estilo.lead }}</p>
+          <div v-if="estilo.stats?.length" class="bars">
+            <div v-for="(s, i) in estilo.stats" :key="i" class="bar">
               <span class="bar__label">{{ s.label }}</span>
               <div class="bar__track"><div class="bar__fill" :style="{ width: s.width + '%' }" /></div>
-              <span class="bar__val">{{ s.val }}</span>
+              <span class="bar__val">{{ s.valor }}</span>
             </div>
           </div>
         </article>
 
-        <article class="tile tile--dark b-c5 estilo__pitch">
+        <article v-if="estilo.xi?.filas?.length" class="tile tile--dark b-c5 estilo__pitch">
           <div class="estilo__pitch-head">
             <span class="tile__kicker">XI titular probable</span>
-            <span class="estilo__formation">4-3-3</span>
+            <span class="estilo__formation">{{ estilo.formacion }}</span>
           </div>
           <div class="pitch">
             <span class="pitch__mid" />
             <span class="pitch__circle" />
             <div class="pitch__rows">
               <div
-                v-for="(row, i) in xi.rows"
+                v-for="(row, i) in estilo.xi.filas"
                 :key="i"
                 class="pitch__row"
-                :style="xi.padding?.[i] ? `padding:0 ${xi.padding[i]}` : ''"
+                :style="estilo.xi.padding?.[i] ? `padding:0 ${estilo.xi.padding[i]}` : ''"
               >
                 <div
                   v-for="p in row"
                   :key="p.num"
-                  :class="['pp', p.cap ? 'pp--cap' : '']"
+                  :class="['pp', p.capitan ? 'pp--cap' : '']"
                 >
                   <span class="pp__num">{{ p.num }}</span>
-                  <span class="pp__name">{{ p.name }}</span>
+                  <span class="pp__name">{{ p.nombre }}</span>
                 </div>
               </div>
             </div>
@@ -377,11 +316,11 @@ const historia = [
     </section>
 
     <!-- PLANTILLA -->
-    <section id="plantilla" class="pro-section pro-container">
+    <section v-if="plantillaDestacada.length > 0" id="plantilla" class="pro-section pro-container">
       <div class="pro-sec-head">
         <div class="pro-sec-head__l">
-          <span class="pro-sec-head__kicker">26 convocados</span>
-          <h2 class="pro-sec-head__title">Plantilla oficial</h2>
+          <span class="pro-sec-head__kicker">{{ plantillaDestacada.length }} jugadores destacados</span>
+          <h2 class="pro-sec-head__title">Plantilla</h2>
         </div>
         <NuxtLink
           :to="`/selecciones/${equipo.slug}/plantilla/`"
@@ -389,36 +328,30 @@ const historia = [
         >Ver plantilla completa →</NuxtLink>
       </div>
 
-      <div class="chip-row plantilla__chips">
-        <span class="pchip pchip--green">3 POR</span>
-        <span class="pchip">9 DEF</span>
-        <span class="pchip">8 MED</span>
-        <span class="pchip">6 DEL</span>
-      </div>
-
       <BentoGrid>
-        <a
+        <component
+          :is="p.jugadorSlug ? 'a' : 'div'"
           v-for="p in plantillaDestacada"
           :key="p.num"
           class="ptile b-c2"
-          :href="p.href ?? '#'"
-          :style="p.highlight ? 'outline:3px solid var(--color-primary-green)' : ''"
+          :href="p.jugadorSlug ? `/jugadores/${p.jugadorSlug}/` : null"
+          :style="p.destacado ? 'outline:3px solid var(--color-primary-green)' : ''"
         >
           <img src="/img/player-placeholder.svg" alt="" />
           <span
             class="ptile__num"
-            :style="p.highlight ? 'background:var(--color-primary-green);color:#fff' : ''"
+            :style="p.destacado ? 'background:var(--color-primary-green);color:#fff' : ''"
           >{{ p.num }}</span>
           <div class="ptile__body">
             <span class="ptile__pos">{{ p.pos }}</span>
-            <span class="ptile__name">{{ p.name }}</span>
+            <span class="ptile__name">{{ p.nombre }}</span>
           </div>
-        </a>
+        </component>
       </BentoGrid>
     </section>
 
     <!-- EDITORIAL -->
-    <section id="noticias" class="pro-section pro-container">
+    <section v-if="editorial" id="noticias" class="pro-section pro-container">
       <div class="pro-sec-head">
         <div class="pro-sec-head__l">
           <span class="pro-sec-head__kicker">Editorial · cobertura {{ equipo.apodo ?? equipo.nombre }}</span>
@@ -432,8 +365,8 @@ const historia = [
           <div class="ed-card__img"><img src="/img/news-placeholder.svg" alt="" /></div>
           <div class="ed-card__body">
             <span class="ed-card__kicker">{{ editorial.lead.kicker }}</span>
-            <h3 class="ed-card__title">{{ editorial.lead.title }}</h3>
-            <p class="tile__caption">{{ editorial.lead.body }}</p>
+            <h3 class="ed-card__title">{{ editorial.lead.titulo }}</h3>
+            <p class="tile__caption">{{ editorial.lead.cuerpo }}</p>
             <span class="ed-card__meta">{{ editorial.lead.meta }}</span>
           </div>
         </a>
@@ -447,7 +380,7 @@ const historia = [
           <div class="ed-card__img"><img src="/img/news-placeholder.svg" alt="" /></div>
           <div class="ed-card__body">
             <span class="ed-card__kicker">{{ n.kicker }}</span>
-            <h3 class="ed-card__title">{{ n.title }}</h3>
+            <h3 class="ed-card__title">{{ n.titulo }}</h3>
             <span class="ed-card__meta">{{ n.meta }}</span>
           </div>
         </a>
@@ -455,7 +388,7 @@ const historia = [
     </section>
 
     <!-- HISTORIA -->
-    <section id="historia" class="pro-section pro-container">
+    <section v-if="historia.length > 0" id="historia" class="pro-section pro-container">
       <div class="pro-sec-head">
         <div class="pro-sec-head__l">
           <span class="pro-sec-head__kicker">Mundiales anteriores</span>
@@ -467,10 +400,10 @@ const historia = [
           v-for="(h, i) in historia"
           :key="i"
           class="tile b-c3"
-          :class="h.variant === 'green' ? 'tile--green' : ''"
+          :class="h.destacado ? 'tile--green' : ''"
         >
           <span class="tile__kicker">{{ h.kicker }}</span>
-          <h3 class="tile__title">{{ h.title }}</h3>
+          <h3 class="tile__title">{{ h.titulo }}</h3>
           <p class="tile__caption">{{ h.caption }}</p>
         </article>
       </BentoGrid>
